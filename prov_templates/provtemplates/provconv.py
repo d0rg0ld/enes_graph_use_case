@@ -331,82 +331,98 @@ def add_records(old_entity, new_entity, instance_dict):
 	print repr(rel)
 	print repr(rel.attributes)
 
+	prnt=False
 	if 1:
             if rel.get_type() == prov.PROV_GENERATION:
-		print "ID: " + str(rel.identifier)
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_USAGE:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_COMMUNICATION:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_START:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_END:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_INVALIDATION:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
 
             elif rel.get_type() == prov.PROV_DERIVATION:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
 
             if rel.get_type() == prov.PROV_ATTRIBUTION:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_ASSOCIATION:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_DELEGATION:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_INFLUENCE:
-		print "ID: " + str(rel.identifier)	
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print "ID: " + str(rel.identifier)	
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
 
             elif rel.get_type() == prov.PROV_ALTERNATE:
-		print repr(rel)
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print repr(rel)
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
             elif rel.get_type() == prov.PROV_SPECIALIZATION:
-		print repr(rel)
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print repr(rel)
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
 
             elif rel.get_type() == prov.PROV_MEMBERSHIP:
-		print repr(rel)
-		print repr(rel.formal_attributes)	
-		print repr(rel.extra_attributes)	
+		if prnt:
+			print repr(rel)
+			print repr(rel.formal_attributes)	
+			print repr(rel.extra_attributes)	
 
 	fa_tup=[]
 	for fa in rel.formal_attributes:
 		if fa[1] != None:
-			fa_tup.append(tuple([fa[0], match_qn(fa[1], instance_dict)],))
+			fa_tup.append(tuple([fa[0], match(fa[1], instance_dict, False)],))
 		else:
 			fa_tup.append((fa[0], None))
-
-	print "THIS : "  + repr(tuple(fa_tup))
+	if prnt:
+		print "THIS : "  + repr(tuple(fa_tup))
 
         args = rel.args
-        print (repr(args))
+	if prnt:
+        	print (repr(args))
         #(first,second, third) = args     
         #(nfirst,nsecond) = (match_qn(first,instance_dict),match_qn(second,instance_dict))           
-        (nfirst,nsecond) = (match_qn(args[0],instance_dict),match_qn(args[1],instance_dict))           
+        (nfirst,nsecond) = (match(args[0],instance_dict, False),match(args[1],instance_dict, False))           
         new_rel = set_rel(new_entity,rel,nfirst,nsecond)        
     return new_entity   
 
@@ -429,7 +445,7 @@ def match_qn(qn,mdict):
     lp = qn.localpart
     ns = qn.namespace.prefix
     source = ns+":"+lp
-    print "qn: " + source
+    #print "qn: " + source
     target = match(source,mdict, False)
     return target
 
@@ -443,21 +459,27 @@ def match(eid,mdict, node):
     Returns:
         meid: same as input or matching value for eid key in mdict
     '''
+    adr=eid
+    if isinstance(adr,prov.QualifiedName):
+	lp = adr.localpart
+	ns = adr.namespace.prefix
+	adr=ns+":"+lp
     #override: vargen found in entity declaration position: create a uuid
-    #print "match " + repr(eid) + " with " + str(eid) + " red " + str(eid)[:7]
-    if "vargen:" in str(eid) and str(eid)[:7]=="vargen:":
+    #print "match " + repr(adr) + " with " + str(adr) + " red " + str(adr)[:7]
+    #not optimal, need ability to provide custom namespace
+    if node and "vargen:" in str(adr) and str(adr)[:7]=="vargen:":
 	uid=str(uuid.uuid4())
-	if eid not in mdict:
-		mdict[eid]=[]
-	mdict[eid].append(uid)
+	if adr not in mdict:
+		mdict[adr]=[]
+	mdict[adr].append(prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid))
 	return prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
-    if eid in mdict:
-        #print("Match: ",eid)
-        meid = mdict[eid]
+    if adr in mdict:
+        #print("Match: ",adr)
+        madr = mdict[adr]
     else:
-        #print("No Match: ",eid)
-        meid = eid
-    return meid
+        #print("No Match: ",adr)
+        madr = adr
+    return madr
 
 def attr_match(attr_list,mdict):
     '''
@@ -470,9 +492,11 @@ def attr_match(attr_list,mdict):
     '''      
     p_dict = {}
     for (pn,pv)  in attr_list:
-        npn_new = match_qn(pn,mdict)  
+	print "pn: " + repr(pn) + " pv: " + repr(pv)
+        npn_new = match(pn,mdict, False)  
+	print "npn_new: " + repr(npn_new)
         p_dict[npn_new] = match(pv,mdict, False)
-        #print("Attr dict:",p_dict)
+        print("Attr dict:",p_dict)
     return p_dict 
 #---------------------------------------------------------------
 
