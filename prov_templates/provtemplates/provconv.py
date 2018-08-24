@@ -263,14 +263,25 @@ def add_records(old_entity, new_entity, instance_dict):
         else:
             print("Warning: Unrecognized element type: ",rec)
 
+    #make tmpl:linked sweep and determine order
+    linkedDict=dict()
+    tmpl_linked_qn=prov.QualifiedName(prov.Namespace("tmpl", "http://openprovenance.org/tmpl#"), "linked")
+    for rec in nodes:
+	eid = rec.identifier
+	if tmpl_linked_qn in rec.attributes:
+		linkedDict[eid]=rec.attributes[tmpl_linked_qn]
+
+
     for rec in nodes:
         eid = rec.identifier
         attr = rec.attributes
         args = rec.args
+	print(attr)
         props = attr_match(attr,instance_dict)
 	print eid._str
         neid = match(eid._str,instance_dict, True)
-        
+      	print repr(neid) 
+	#here we cann inject vargen things if there is a linked attr 
         if isinstance(neid,list):
             i = 0
             for n in neid: 
@@ -470,15 +481,18 @@ def match(eid,mdict, node):
     if node and "vargen:" in str(adr) and str(adr)[:7]=="vargen:":
 	uid=str(uuid.uuid4())
 	if adr not in mdict:
-		mdict[adr]=[]
-	mdict[adr].append(prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid))
+		mdict[adr]=prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
+	else:
+		lst=list(mdict[adr])
+		mdict[adr]=lst
+		mdict[adr].append(prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid))
 	return prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
     if adr in mdict:
         #print("Match: ",adr)
         madr = mdict[adr]
     else:
         #print("No Match: ",adr)
-        madr = adr
+        madr = eid 
     return madr
 
 def attr_match(attr_list,mdict):
