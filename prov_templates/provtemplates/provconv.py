@@ -55,6 +55,7 @@ Package provides:
 import prov.model as prov
 import six      
 import itertools
+import uuid
 
 def set_namespaces(ns, prov_doc):
     '''
@@ -65,6 +66,8 @@ def set_namespaces(ns, prov_doc):
     Returns:
         Prov document (or bundle) instance with namespaces set
     '''    
+    
+    print("here set namespace")
     
     if isinstance(ns,dict):  
         for (sn,ln) in ns.items():
@@ -147,8 +150,8 @@ def save_and_show(doc,filename):
     
     Args:
         doc (ProvDocument): prov document to store and show
-        filename (string) : präfix string for filename
-    Returns:
+        filename (string) : praefix string for filename
+	Returns:
         files stored in different output formats in:
             filename.provn filename.xml, filename.rdf
         prints additionally provn serialization format    
@@ -186,7 +189,7 @@ def set_rel(new_entity,rel,nfirst,nsecond):
             if rel.get_type() == prov.PROV_ATTRIBUTION:
                 new_rel = new_entity.wasAttributedTo(nfirst[nf],nsecond[ns])
             elif rel.get_type() == prov.PROV_ASSOCIATION:
-                new_rel = new_entity.wasAttributedTo(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasAssociatedWith(nfirst[nf],nsecond[ns])
             elif rel.get_type() == prov.PROV_DERIVATION:
                 new_rel = new_entity.wasDerivedFrom(nfirst[nf],nsecond[ns])
             elif rel.get_type() == prov.PROV_DELEGATION:
@@ -197,6 +200,10 @@ def set_rel(new_entity,rel,nfirst,nsecond):
                 new_rel = new_entity.wasInfluencedBy(nfirst[nf],nsecond[ns])
             elif rel.get_type() == prov.PROV_COMMUNICATION:
                 new_rel = new_entity.wasInformedBy(nfirst[nf],nsecond[ns])
+            elif rel.get_type() == prov.PROV_USAGE:
+                new_rel = new_entity.used(nfirst[nf],nsecond[ns])
+            elif rel.get_type() == prov.PROV_MEMBERSHIP:
+                new_rel = new_entity.hadMember(nfirst[nf],nsecond[ns])
             else:
                 print("Warning! This relation is not yet supported. typeinfo: ",rel.get_type() )
                 # ToDo: unsufficient error handling for now .. 
@@ -236,6 +243,9 @@ def add_records(old_entity, new_entity, instance_dict):
     Todo: change return values of functions (this one and the ones called)    
     
     '''
+    
+    print("Here add recs")
+    
     relations = []
     nodes = []
     
@@ -258,7 +268,8 @@ def add_records(old_entity, new_entity, instance_dict):
         attr = rec.attributes
         args = rec.args
         props = attr_match(attr,instance_dict)
-        neid = match(eid._str,instance_dict)
+	print eid._str
+        neid = match(eid._str,instance_dict, True)
         
         if isinstance(neid,list):
             i = 0
@@ -269,9 +280,133 @@ def add_records(old_entity, new_entity, instance_dict):
              new_node = new_entity.entity(prov.Identifier(neid),other_attributes=props)
 
     for rel in relations:
+
+	# We need to consider the following things:
+
+	# id: opt Id
+	
+	# c: collection
+
+	# e: entity
+	# e1: entity
+	# e2: entity
+	# alt1: entity
+	# alt2: entity
+	# infra: entity
+	# supra: entity
+
+	# a: activity
+	# a1: activity
+	# a2: activity
+	# g2: generation activity
+	# u1: usage activity
+
+	# ag: agent
+	# ag1: agent
+	# ag2: agent
+	
+	# pl: plan
+
+	# t: time
+
+	#generation	wasGeneratedBy(id;e,a,t,attrs)
+	#Usage		used(id;a,e,t,attrs)
+	#Communication	wasInformedBy(id;a2,a1,attrs)
+	#Start		wasStartedBy(id;a2,e,a1,t,attrs)
+	#End		wasEndedBy(id;a2,e,a1,t,attrs)
+	#Invalidation	wasInvalidatedBy(id;e,a,t,attrs)
+	
+	#Derivation	wasDerivedFrom(id; e2, e1, a, g2, u1, attrs)
+	
+	#Attribution	wasAttributedTo(id;e,ag,attr)
+	#Association	wasAssociatedWith(id;a,ag,pl,attrs)
+	#Delegation	actedOnBehalfOf(id;ag2,ag1,a,attrs)	
+	#Influence	wasInfluencedBy(id;e2,e1,attrs)
+	
+	#Alternate	alternateOf(alt1, alt2)
+	#Specialization	specializationOf(infra, supra)
+	
+	#Membership	hadMember(c,e)	
+
+	print repr(rel)
+	print repr(rel.attributes)
+
+	if 1:
+            if rel.get_type() == prov.PROV_GENERATION:
+		print "ID: " + str(rel.identifier)
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_USAGE:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_COMMUNICATION:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_START:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_END:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_INVALIDATION:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+
+            elif rel.get_type() == prov.PROV_DERIVATION:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+
+            if rel.get_type() == prov.PROV_ATTRIBUTION:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_ASSOCIATION:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_DELEGATION:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_INFLUENCE:
+		print "ID: " + str(rel.identifier)	
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+
+            elif rel.get_type() == prov.PROV_ALTERNATE:
+		print repr(rel)
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+            elif rel.get_type() == prov.PROV_SPECIALIZATION:
+		print repr(rel)
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+
+            elif rel.get_type() == prov.PROV_MEMBERSHIP:
+		print repr(rel)
+		print repr(rel.formal_attributes)	
+		print repr(rel.extra_attributes)	
+
+	fa_tup=[]
+	for fa in rel.formal_attributes:
+		if fa[1] != None:
+			fa_tup.append(tuple([fa[0], match_qn(fa[1], instance_dict)],))
+		else:
+			fa_tup.append((fa[0], None))
+
+	print "THIS : "  + repr(tuple(fa_tup))
+
         args = rel.args
-        (first,second) = args     
-        (nfirst,nsecond) = (match_qn(first,instance_dict),match_qn(second,instance_dict))           
+        print (repr(args))
+        #(first,second, third) = args     
+        #(nfirst,nsecond) = (match_qn(first,instance_dict),match_qn(second,instance_dict))           
+        (nfirst,nsecond) = (match_qn(args[0],instance_dict),match_qn(args[1],instance_dict))           
         new_rel = set_rel(new_entity,rel,nfirst,nsecond)        
     return new_entity   
 
@@ -294,10 +429,11 @@ def match_qn(qn,mdict):
     lp = qn.localpart
     ns = qn.namespace.prefix
     source = ns+":"+lp
-    target = match(source,mdict)
+    print "qn: " + source
+    target = match(source,mdict, False)
     return target
 
-def match(eid,mdict):
+def match(eid,mdict, node):
     '''
     helper function to match strings based on dictionary
     
@@ -307,6 +443,14 @@ def match(eid,mdict):
     Returns:
         meid: same as input or matching value for eid key in mdict
     '''
+    #override: vargen found in entity declaration position: create a uuid
+    #print "match " + repr(eid) + " with " + str(eid) + " red " + str(eid)[:7]
+    if "vargen:" in str(eid) and str(eid)[:7]=="vargen:":
+	uid=str(uuid.uuid4())
+	if eid not in mdict:
+		mdict[eid]=[]
+	mdict[eid].append(uid)
+	return prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
     if eid in mdict:
         #print("Match: ",eid)
         meid = mdict[eid]
@@ -327,7 +471,7 @@ def attr_match(attr_list,mdict):
     p_dict = {}
     for (pn,pv)  in attr_list:
         npn_new = match_qn(pn,mdict)  
-        p_dict[npn_new] = match(pv,mdict)
+        p_dict[npn_new] = match(pv,mdict, False)
         #print("Attr dict:",p_dict)
     return p_dict 
 #---------------------------------------------------------------
@@ -354,6 +498,9 @@ def instantiate_template(prov_doc,instance_dict):
         prov_doc (ProvDocument): input prov document template
         instance_dict (dict): match dictionary
     ''' 
+    
+    print("here inst templ")
+    
     new_doc = set_namespaces(prov_doc.namespaces,prov.ProvDocument()) 
     
     new_doc = add_records(prov_doc,new_doc,instance_dict)
@@ -365,4 +512,3 @@ def instantiate_template(prov_doc,instance_dict):
         new_bundle = add_records(bundle, new_bundle,instance_dict)      
             
     return new_doc
-
