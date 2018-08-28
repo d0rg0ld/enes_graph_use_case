@@ -16,6 +16,7 @@ purpose: a lightweight alternative to the java based ProvToolbox
          is disruptive to the workflow
          
 Author: Stephan Kindermann
+	Doron Goldfarb
 
 History: 
       - version 0.1    (11. July 2018)
@@ -30,6 +31,10 @@ History:
         + support for provdocs without bundles
       - version 0.5    (...)  
         + application to concrete ENES use case
+      - version 0.6    (28.8.2018)
+	+ support tmpl:linked
+	+ support vargen: namespace for auto generated uuids
+	+ support expansion for relations (experimental)
         
         
 Todo:
@@ -555,85 +560,6 @@ def add_records(old_entity, new_entity, instance_dict):
 
 	#print repr(rel)
 	#print repr(rel.attributes)
-
-	prnt=False
-	if 1:
-            if rel.get_type() == prov.PROV_GENERATION:
-		if prnt:
-			print "ID: " + str(rel.identifier)
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_USAGE:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_COMMUNICATION:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_START:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_END:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_INVALIDATION:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-
-            elif rel.get_type() == prov.PROV_DERIVATION:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-
-            if rel.get_type() == prov.PROV_ATTRIBUTION:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_ASSOCIATION:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_DELEGATION:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_INFLUENCE:
-		if prnt:
-			print "ID: " + str(rel.identifier)	
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-
-            elif rel.get_type() == prov.PROV_ALTERNATE:
-		if prnt:
-			print repr(rel)
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-            elif rel.get_type() == prov.PROV_SPECIALIZATION:
-		if prnt:
-			print repr(rel)
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-
-            elif rel.get_type() == prov.PROV_MEMBERSHIP:
-		if prnt:
-			print repr(rel)
-			print repr(rel.formal_attributes)	
-			print repr(rel.extra_attributes)	
-
-	fa_tup=[]
 	
 	#expand all possible formal attributes
 	linkedMatrix=collections.OrderedDict()
