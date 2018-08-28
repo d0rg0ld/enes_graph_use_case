@@ -126,11 +126,11 @@ template="""
 outNSpref="ex"
 outNS="http://example.com#"
 
-bind_dicts=[]
+#bind_dicts=[]
+bind_dict=dict()
 
 for index, row in data.iterrows():
     rtemplate=template
-    bind_dict={}
     for col in data.columns.values:
         if col in bindmap:
 
@@ -142,7 +142,16 @@ for index, row in data.iterrows():
                 outval=prov.QualifiedName(prov.Namespace(outNSpref,outNS), urllib.quote(outval))
 
 	    #print col + " " + bindmap[col]["varname"] + " " + outval
-            bind_dict["var:"+bindmap[col]["varname"]]=outval
+	    ID = "var:"+bindmap[col]["varname"]
+	    if ID not in bind_dict:
+            	bind_dict[ID]=outval
+	    else:
+		if not isinstance(bind_dict[ID], list):
+			tmp=list()
+			tmp.append(bind_dict[ID])
+			bind_dict[ID]=tmp
+		if outval not in bind_dict[ID]:
+			bind_dict[ID].append(outval)
             #outval=row[col]
             if bindmap[col]["val"]=="literal":
                 outval='"'+outval+'"'
@@ -154,16 +163,18 @@ for index, row in data.iterrows():
             rtemplate=rtemplate+outstatement
             
     
-    bind_dicts.append(bind_dict)
+    #bind_dicts.append(bind_dict)
 
 print(rtemplate)
-    
+
+bind_dict["var:dendroPlan"]=[prov.QualifiedName(prov.Namespace(outNSpref,outNS), "thePlan1"), prov.QualifiedName(prov.Namespace(outNSpref,outNS), "thePlan2")]    
+bind_dict["var:organization"]=prov.QualifiedName(prov.Namespace(outNSpref,outNS), "theOrganization")    
     
 provtemplate=prov.ProvDocument()    
 res=provtemplate.deserialize(source="excelProvTemplate.rdf", format="rdf", rdf_format="xml")
-print(bind_dicts[0])
+print(bind_dict)
 print(res.serialize(format="rdf"))
-exp=provconv.instantiate_template(res, bind_dicts[0])
+exp=provconv.instantiate_template(res, bind_dict)
 
 outfile=open("excelProvTemplate_exp.provn", "w")
 outfile.write(exp.serialize(format="provn"))

@@ -56,6 +56,8 @@ import prov.model as prov
 import six      
 import itertools
 import uuid
+import sys
+import collections
 
 def set_namespaces(ns, prov_doc):
     '''
@@ -168,47 +170,250 @@ def save_and_show(doc,filename):
     
     return doc1
 
-def set_rel(new_entity,rel,nfirst,nsecond):
-    '''
-       helper function to add specific relations according to relation type
-       implements cartesian expansion only (no "linked" restrictions) by now
-    '''    
-    if not isinstance(nfirst,list):
-        nfirst = [nfirst]
-    if not isinstance(nsecond,list):
-        nsecond = [nsecond]
-    
-    # ToDo: bad programming style - make this more intuitive 
-    nf = -1
-    for aitem in nfirst: 
-        nf += 1
-        ns = -1
-        for bitem in nsecond: 
-            ns += 1
-            
+def make_rel(new_entity,rel, formalattrs):
+	    new_rel=None
+	    #handle expansion
+	    
             if rel.get_type() == prov.PROV_ATTRIBUTION:
-                new_rel = new_entity.wasAttributedTo(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasAttributedTo(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_ASSOCIATION:
-                new_rel = new_entity.wasAssociatedWith(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasAssociatedWith(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_DERIVATION:
-                new_rel = new_entity.wasDerivedFrom(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasDerivedFrom(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_DELEGATION:
-                new_rel = new_entity.actedOnBehalfOf(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.actedOnBehalfOf(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_GENERATION:
-                new_rel = new_entity.wasGeneratedBy(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasGeneratedBy(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_INFLUENCE:
-                new_rel = new_entity.wasInfluencedBy(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasInfluencedBy(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_COMMUNICATION:
-                new_rel = new_entity.wasInformedBy(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.wasInformedBy(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_USAGE:
-                new_rel = new_entity.used(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.used(other_attributes=rel.extra_attributes, *formalattrs)
             elif rel.get_type() == prov.PROV_MEMBERSHIP:
-                new_rel = new_entity.hadMember(nfirst[nf],nsecond[ns])
+                new_rel = new_entity.hadMember(*formalattrs)
+                #new_rel = new_entity.hadMember(other_attributes=rel.extra_attributes, *formalattrs)
+            elif rel.get_type() == prov.PROV_START:
+                new_rel = new_entity.wasStartedBy(other_attributes=rel.extra_attributes, *formalattrs)
+            elif rel.get_type() == prov.PROV_END:
+                new_rel = new_entity.wasEndedBy(other_attributes=rel.extra_attributes, *formalattrs)
+            elif rel.get_type() == prov.PROV_INVALIDATION:
+                new_rel = new_entity.wasInvalidatedBy(other_attributes=rel.extra_attributes, *formalattrs)
+            elif rel.get_type() == prov.PROV_ALTERNATE:
+                new_rel = new_entity.alternateOf(other_attributes=rel.extra_attributes, *formalattrs)
+            elif rel.get_type() == prov.PROV_SPECIALIZATION:
+                new_rel = new_entity.specializationOf(other_attributes=rel.extra_attributes, *formalattrs)
             else:
                 print("Warning! This relation is not yet supported. typeinfo: ",rel.get_type() )
                 # ToDo: unsufficient error handling for now .. 
                 new_rel = new_entity("ex:missing relation")
+
+	    return new_rel
+	
+
+def set_rel(new_entity,rel,expAttr, linkedRelAttrs):
+    '''
+       helper function to add specific relations according to relation type
+       implements cartesian expansion only (no "linked" restrictions) by now
+    '''    
+
+    cnt=0
+    attrlists=[]
+    indexlists=[]
+    #create groups
+    for g in linkedRelAttrs:
+	alist=[]
+	ilist=[]
+	cnt=0
+    	for a in expAttr:
+		if a in g:
+			alist.append(expAttr[a])
+			ilist.append(cnt)
+		cnt+=1
+	attrlists.append(alist)
+	indexlists.append(ilist)
+		
+	
+    print repr(expAttr)
+    print repr(attrlists)
+    print repr(indexlists)
+
+    outLists=[]
+    for a in attrlists:
+	outLists.append(zip(*a))
+
+    #taken from http://code.activestate.com/recipes/577932-flatten-arraytuple/
+    flatten = lambda arr: reduce(lambda x, y: ((isinstance(y, (list, tuple)) or x.append(y)) and x.extend(flatten(y))) or x, arr, [])
+
+    idx=flatten(indexlists)	
+    for element in itertools.product(*outLists):
+	out=flatten(element)
+	outordered=[out[i] for i in idx]	
+	make_rel(new_entity, rel, outordered)
+
+
+    #print linked
+
+    #The maximum would be to produce the cartesian expansion of all sets in expAttr
+
+    #return new_rel    
+
+def set_rel_o(new_entity,rel,nfirst,nsecond, linked=False):
+    '''
+       helper function to add specific relations according to relation type
+       implements cartesian expansion only (no "linked" restrictions) by now
+    '''    
+
+    #print linked
+
+    if not isinstance(nfirst,list):
+        nfirst = [nfirst]
+    if not isinstance(nsecond,list):
+        nsecond = [nsecond]
+   
+    if not linked: 
+    	# ToDo: bad programming style - make this more intuitive 
+    	nf = -1
+    	for aitem in nfirst: 
+    	    nf += 1
+    	    ns = -1
+    	    for bitem in nsecond: 
+    	        ns += 1
+    	        new_rel=make_rel(new_entity, rel ,nfirst[nf],nsecond[ns])
+    else:
+	nf=-1
+	for aitem in nfirst:
+		nf += 1
+		new_rel=make_rel(new_entity, rel, nfirst[nf],nsecond[nf])
+		
     return new_rel    
+
+def checkLinked(nodes, instance_dict):
+
+    tmpl_linked_qn=prov.QualifiedName(prov.Namespace("tmpl", "http://openprovenance.org/tmpl#"), "linked")
+    #make tmpl:linked sweep and determine order
+    # ASSUMPTION: Each entity can only be link to one "ancestor" entity, 
+    #			one ancestor entity can be linked to by multiple "successor" entities
+    #				NO CYCLES!
+    # -> This implies: There is only one root and the network of linked rels is a directed acyclic graph
+
+    linkedDict=dict()
+    linkedGroups=list()
+    for rec in nodes:
+	eid = rec.identifier
+	#print repr(rec.attributes)
+	for attr in rec.attributes: 
+		if tmpl_linked_qn == attr[0]:
+			linkedDict[eid]=attr[1]
+  
+    dependents=[]
+    roots=[]
+    intermediates=[]
+    for id in linkedDict:
+	if id not in dependents:
+		dependents.append(id)
+
+    for id in linkedDict:
+	if linkedDict[id] not in dependents:
+		roots.append(linkedDict[id])
+	else:
+		intermediates.append(linkedDict[id])
+
+    #print "roots: " + repr(roots)
+    #print "dependents: " + repr(dependents)
+    #print "intermediates: " + repr(intermediates)
+
+    def dfs_levels(node, links, level):
+	lower=dict()
+	#print str(node) + " " + repr(lower)
+	for k in [k for k,v in links.items() if v == node]:
+		#print str(k) + " child of " + str(node)
+		ret=dfs_levels(k, links, level+1)
+		#print repr(ret)
+		if ret!=None:
+			lower.update(ret)
+	myval={node : level}
+	#print "Appending : " + repr(myval)
+	lower.update(myval)
+	#print "Returning : " + repr(lower)	
+	return(lower)
+
+    numInstances=dict()
+    combRoot=dict()
+    # traverse from root
+    offset=0
+    for r in roots:
+	retval=dfs_levels(r, linkedDict, offset)
+	print "root: " + str(r)
+
+ 	#get max rank
+    	maxr=max(retval.values())	
+
+	# we need to check how many entries we have
+	maxEntries=0
+    	for rec in nodes:
+		if rec.identifier in retval:
+			eid = rec.identifier
+			neid = match(eid._str,instance_dict, False)
+			#assume single instance bound to this node
+			length=0
+			if not isinstance(neid, list):
+				length=1
+			print repr(neid)
+			print repr(eid)
+			if neid==eid._str:
+				# no match: if unassigned var or vargen variable, assume length 0
+				length=0
+				print "same"
+			if length>maxEntries:
+				maxEntries=length
+			print length
+			if isinstance(neid,list):
+				# list is assigned to node, now all lengths must be equal
+				length=len(neid)
+				if length!=maxEntries:
+					if maxEntries>0:
+						print length
+						print maxEntries
+						print "Linked entities must have same number of bound instances!"
+						sys.exit(1)
+					maxEntries=length
+	#	if rec.identifier not in combRoot:
+	#		retval[rec.identifier]=maxr+1
+
+	for n in retval:
+		numInstances[n]=maxEntries
+	combRoot.update(retval)
+	linkedGroups.append(retval)
+	offset=maxr+1
+
+    for rec in nodes:
+	if rec.identifier not in combRoot:
+		combRoot[rec.identifier]=offset
+		linkedGroups.append({rec.identifier : offset})
+		eid=rec.identifier
+		neid = match(eid._str,instance_dict, False)
+		if isinstance(neid, list):
+			numInstances[eid]=len(neid)
+		else:
+			numInstances[eid]=1
+	#need to remember number of instances for each var
+	# when multiple link groups rank accordingly
+	
+
+    #print repr(combRoot)
+    #try reorder nodes based on tmpl:linked hierarchy	
+    #nodes_sorted=sorted(nodes, key=retval.get)  
+ 
+    fnc=lambda x: combRoot[x.identifier]
+    nodes_sorted=sorted(nodes, key=fnc)
+    for rec in nodes_sorted:
+	print "SORT : " + str(rec.identifier)
+  
+    print repr(linkedGroups)
+
+    return { "nodes" : nodes_sorted, "numInstances" : numInstances, "linkedGroups" : linkedGroups}
+
 
 def prop_select(props,n):
     '''
@@ -218,6 +423,13 @@ def prop_select(props,n):
     #print("Props and n: ",props,n)
     for key,val in props.items():
         if isinstance(val,list):
+	    #print "---------------"
+	    #print len(val) 
+	    #
+	    # BRUTE FORCEprint n
+	    # BRUTE FORCE
+	    if len(val)==1:
+		n=0
             nprops[key] = val[n]
         else:
             nprops[key] = val 
@@ -263,24 +475,26 @@ def add_records(old_entity, new_entity, instance_dict):
         else:
             print("Warning: Unrecognized element type: ",rec)
 
-    #make tmpl:linked sweep and determine order
-    linkedDict=dict()
-    tmpl_linked_qn=prov.QualifiedName(prov.Namespace("tmpl", "http://openprovenance.org/tmpl#"), "linked")
-    for rec in nodes:
-	eid = rec.identifier
-	if tmpl_linked_qn in rec.attributes:
-		linkedDict[eid]=rec.attributes[tmpl_linked_qn]
+    linkedInfo=checkLinked(nodes, instance_dict)
+    nodes_sorted=linkedInfo["nodes"]
+    numInstances=linkedInfo["numInstances"]
+    linkedGroups=linkedInfo["linkedGroups"]
 
-
-    for rec in nodes:
+    for rec in nodes_sorted:
         eid = rec.identifier
         attr = rec.attributes
         args = rec.args
-	print(attr)
+	#print(attr)
+	
+	#print eid._str
+	#dirty trick
+        neid = match(eid._str,instance_dict, True, numInstances[eid])
+	#print(repr(instance_dict))
         props = attr_match(attr,instance_dict)
-	print eid._str
-        neid = match(eid._str,instance_dict, True)
-      	print repr(neid) 
+	#print "-------------------"
+      	#print repr(neid)
+	#print "-------------------"
+	#print repr(props)
 	#here we cann inject vargen things if there is a linked attr 
         if isinstance(neid,list):
             i = 0
@@ -339,8 +553,8 @@ def add_records(old_entity, new_entity, instance_dict):
 	
 	#Membership	hadMember(c,e)	
 
-	print repr(rel)
-	print repr(rel.attributes)
+	#print repr(rel)
+	#print repr(rel.attributes)
 
 	prnt=False
 	if 1:
@@ -420,21 +634,109 @@ def add_records(old_entity, new_entity, instance_dict):
 			print repr(rel.extra_attributes)	
 
 	fa_tup=[]
-	for fa in rel.formal_attributes:
-		if fa[1] != None:
-			fa_tup.append(tuple([fa[0], match(fa[1], instance_dict, False)],))
+	
+	#expand all possible formal attributes
+	linkedMatrix=collections.OrderedDict()
+	expAttr=collections.OrderedDict()
+	for fa1 in rel.formal_attributes:
+		linkedMatrix[fa1[0]]=collections.OrderedDict()
+		for fa2 in rel.formal_attributes:
+			linkedMatrix[fa1[0]][fa2[0]]=False
+			for group in linkedGroups:
+				if fa1[1] in group and fa2[1] in group: 
+					linkedMatrix[fa1[0]][fa2[0]]=True	
+		if fa1[1] != None:
+			expAttr[fa1[0]]=match(fa1[1], instance_dict, False)
+			if not isinstance(expAttr[fa1[0]], list):
+				expAttr[fa1[0]]=[expAttr[fa1[0]]]
 		else:
-			fa_tup.append((fa[0], None))
-	if prnt:
-		print "THIS : "  + repr(tuple(fa_tup))
+			expAttr[fa1[0]]=[None]
+	
+	#we also want grouped relation attribute names
+	linkedRelAttrs=[]
+	for group in linkedGroups:
+		lst=[]
+		for fa1 in rel.formal_attributes:
+			if fa1[1] in group:
+				lst.append(fa1[0])
+		if len(lst)>0:
+			linkedRelAttrs.append(lst)
+	
+	
+
+	
+	print "------------------------------------------------"
+	
+	print "THIS : "  + repr(expAttr)
+	"""
+	print "------------------------------------------------"
+	for f1 in linkedMatrix:
+		print "\t" + str(f1),
+	print
+	for f1 in linkedMatrix:
+		print str(f1) + "\t",
+		for f2 in linkedMatrix:
+			print str(linkedMatrix[f1][f2]) + "\t",
+		print
+	"""
+	print "------------------------------------------------"
+
+	print repr(linkedRelAttrs)
 
         args = rel.args
 	if prnt:
         	print (repr(args))
         #(first,second, third) = args     
-        #(nfirst,nsecond) = (match_qn(first,instance_dict),match_qn(second,instance_dict))           
-        (nfirst,nsecond) = (match(args[0],instance_dict, False),match(args[1],instance_dict, False))           
-        new_rel = set_rel(new_entity,rel,nfirst,nsecond)        
+        #(nfirst,nsecond) = (match_qn(first,instance_dict),match_qn(second,instance_dict))     
+
+	linked=False
+	for group in linkedGroups:
+		#print "IS " + str(args[0]) + " linked with  " + str(args[1])
+		if args[0] in group and args[1] in group:
+			#print repr(group)
+			#print str(args[0]) + " linked with  " + str(args[1])
+			linked=True
+			break
+      
+        (nfirst,nsecond) = (match(args[0],instance_dict, False),match(args[1],instance_dict, False))     
+
+	#NOT required
+	"""
+	linked=False
+	#highly unefficient
+	firstLink=None
+	first=nfirst
+	if isinstance(first, list):
+		first=first[0]
+	for n in new_entity.records:
+		if n.identifier==first:
+			#print str(n.identifier) + " " + str(first)
+			#print repr(n.attributes)
+			for a in n.attributes:
+				if tmpl_linked_qn == a[0]:
+					print "Found link for " + str(first) + " " + str(a[1])
+					firstLink=a[1]
+	secondLink=None
+	second=nsecond
+	if isinstance(second, list):
+		second=second[0]
+	print str(first) + "  ---  " + str(second)
+	for n in new_entity.records:
+		if n.identifier==second:
+			for a in n.attributes:
+				if tmpl_linked_qn == a[0]:
+					print "Found link for " + str(second) + " " + str(a[1])
+					secondLink= a[1]
+
+	print repr(firstLink) + "   " + repr(secondLink)
+	
+	if (firstLink != None or secondLink != None) and ( firstLink==second or secondLink==first):
+		linked=True
+	"""
+
+	#We need to check if instances are linked    
+        new_rel = set_rel(new_entity,rel,expAttr,linkedRelAttrs)        
+        #new_rel = set_rel_o(new_entity,rel,nfirst,nsecond, linked)        
     return new_entity   
 
 
@@ -460,7 +762,7 @@ def match_qn(qn,mdict):
     target = match(source,mdict, False)
     return target
 
-def match(eid,mdict, node):
+def match(eid,mdict, node, numEntries=1):
     '''
     helper function to match strings based on dictionary
     
@@ -479,14 +781,24 @@ def match(eid,mdict, node):
     #print "match " + repr(adr) + " with " + str(adr) + " red " + str(adr)[:7]
     #not optimal, need ability to provide custom namespace
     if node and "vargen:" in str(adr) and str(adr)[:7]=="vargen:":
-	uid=str(uuid.uuid4())
-	if adr not in mdict:
-		mdict[adr]=prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
-	else:
-		lst=list(mdict[adr])
-		mdict[adr]=lst
-		mdict[adr].append(prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid))
-	return prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
+	ret=None
+	for e in range(0,numEntries):
+		uid=str(uuid.uuid4())
+		if adr not in mdict:
+			ret=prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
+			mdict[adr]=ret
+		else:
+			if not isinstance(mdict[adr], list):
+				tmp=list()
+				tmp.append(mdict[adr])
+				mdict[adr]=tmp
+				tmp2=list()
+				tmp2.append(ret)
+				ret=tmp2
+			qn=prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
+			mdict[adr].append(qn)
+			ret.append(qn)
+	return ret
     if adr in mdict:
         #print("Match: ",adr)
         madr = mdict[adr]
@@ -506,11 +818,11 @@ def attr_match(attr_list,mdict):
     '''      
     p_dict = {}
     for (pn,pv)  in attr_list:
-	print "pn: " + repr(pn) + " pv: " + repr(pv)
+	#print "pn: " + repr(pn) + " pv: " + repr(pv)
         npn_new = match(pn,mdict, False)  
-	print "npn_new: " + repr(npn_new)
+	#print "npn_new: " + repr(npn_new)
         p_dict[npn_new] = match(pv,mdict, False)
-        print("Attr dict:",p_dict)
+        #print("Attr dict:",p_dict)
     return p_dict 
 #---------------------------------------------------------------
 

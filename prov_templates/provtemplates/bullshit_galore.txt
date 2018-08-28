@@ -1,0 +1,208 @@
+   Anmerkung Dendrometer  [cm]                 date neu        person  \
+0       nein          29    43  2018-03-21T00:00:00      Kettenhummer   
+1       nein          27   6.5  2018-03-21T00:00:00      Kettenhummer   
+2       nein          22  33.4  2018-03-21T00:00:00      Kettenhummer   
+3       nein          23  28.8  2018-03-21T00:00:00      Kettenhummer   
+4       nein          31  23.6  2018-03-21T00:00:00      Kettenhummer   
+5       nein          21  29.4  2018-03-21T00:00:00      Kettenhummer   
+6       nein          34  28.6  2018-03-21T00:00:00      Kettenhummer   
+7       nein          20  38.4  2018-03-21T00:00:00      Kettenhummer   
+8       nein          33  11.6  2018-03-21T00:00:00      Kettenhummer   
+9       nein          35    34  2018-03-21T00:00:00      Kettenhummer   
+10      nein          28  18.3  2018-03-21T00:00:00      Kettenhummer   
+11      nein          25  53.4  2018-03-21T00:00:00      Kettenhummer   
+12      nein          26    32  2018-03-21T00:00:00      Kettenhummer   
+13      nein          24    33  2018-03-21T00:00:00      Kettenhummer   
+14      nein          19    38  2018-03-21T00:00:00      Kettenhummer   
+15      nein          32    10  2018-03-21T00:00:00      Kettenhummer   
+16      nein          30  61.8  2018-03-21T00:00:00      Kettenhummer   
+17      nein          36    52  2018-03-21T00:00:00      Kettenhummer   
+18      nein          29    43  2018-03-21T00:00:00             Groiß   
+19      nein          27   6.5  2018-03-21T00:00:00             Groiß   
+20      nein          22  33.4  2018-03-21T00:00:00             Groiß   
+21      nein          23  28.8  2018-03-21T00:00:00             Groiß   
+22      nein          31  23.6  2018-03-21T00:00:00             Groiß   
+23      nein          21  29.4  2018-03-21T00:00:00             Groiß   
+24      nein          34  28.6  2018-03-21T00:00:00             Groiß   
+25      nein          20  38.4  2018-03-21T00:00:00             Groiß   
+26      nein          33  11.6  2018-03-21T00:00:00             Groiß   
+27      nein          35    34  2018-03-21T00:00:00             Groiß   
+28      nein          28  18.3  2018-03-21T00:00:00             Groiß   
+29      nein          25  53.4  2018-03-21T00:00:00             Groiß   
+30      nein          26    32  2018-03-21T00:00:00             Groiß   
+31      nein          24    33  2018-03-21T00:00:00             Groiß   
+32      nein          19    38  2018-03-21T00:00:00             Groiß   
+33      nein          32    10  2018-03-21T00:00:00             Groiß   
+34      nein          30  61.8  2018-03-21T00:00:00             Groiß   
+35      nein          36    52  2018-03-21T00:00:00             Groiß   
+
+        tree  
+0       5011  
+1       5001  
+2       5228  
+3       5005  
+4       5004  
+5       5222  
+6       5232  
+7       5227  
+8       5229  
+9       5225  
+10      5141  
+11      5073  
+12      5124  
+13      5136  
+14  5012 neu  
+15      5097  
+16      5106  
+17      5074  
+18      5011  
+19      5001  
+20      5228  
+21      5005  
+22      5004  
+23      5222  
+24      5232  
+25      5227  
+26      5229  
+27      5225  
+28      5141  
+29      5073  
+30      5124  
+31      5136  
+32  5012 neu  
+33      5097  
+34      5106  
+35      5074  
+
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix tmpl: <http://openprovenance.org/tmpl#> .
+@prefix var: <http://openprovenance.org/var#> .
+@prefix ex: <http://example.com#> .
+
+var:comment a prov:Entity ;
+	tmpl:2dvalue_0_0 "nein" .
+var:dendrometer a prov:Entity ;
+	tmpl:value_0 ex:36 .
+var:readValue a prov:Entity ;
+	tmpl:2dvalue_0_0 52 .
+var:endDate a prov:Entity ;
+	tmpl:2dvalue_0_0 "2018-03-21T00:00:00" .
+var:readingAgent a prov:Entity ;
+	tmpl:value_0 ex:Groi%C3%9F .
+var:tree a prov:Entity ;
+	tmpl:value_0 ex:5074 .
+
+{'var:tree': [<QualifiedName: ex:5011>, <QualifiedName: ex:5001>, <QualifiedName: ex:5228>, <QualifiedName: ex:5005>, <QualifiedName: ex:5004>, <QualifiedName: ex:5222>, <QualifiedName: ex:5232>, <QualifiedName: ex:5227>, <QualifiedName: ex:5229>, <QualifiedName: ex:5225>, <QualifiedName: ex:5141>, <QualifiedName: ex:5073>, <QualifiedName: ex:5124>, <QualifiedName: ex:5136>, <QualifiedName: ex:5012%20neu>, <QualifiedName: ex:5097>, <QualifiedName: ex:5106>, <QualifiedName: ex:5074>], 'var:readValue': ['43', '6.5', '33.4', '28.8', '23.6', '29.4', '28.6', '38.4', '11.6', '34', '18.3', '53.4', '32', '33', '38', '10', '61.8', '52'], 'var:dendrometer': [<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>], 'var:readingAgent': [<QualifiedName: ex:Kettenhummer>, <QualifiedName: ex:Groi%C3%9F>], 'var:endDate': ['2018-03-21T00:00:00'], 'var:comment': ['nein']}
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix ex: <http://example.com#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tmpl: <http://openprovenance.org/tmpl#> .
+@prefix var: <http://openprovenance.org/var#> .
+@prefix vargen: <http://openprovenance.org/vargen#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+{
+    var:dataset a prov:Entity,
+            "Dataset"^^xsd:string ;
+        prov:hadMember vargen:readingData .
+
+    var:dendroPlan a prov:Entity,
+            prov:plan .
+
+    var:organization a prov:Agent,
+            prov:Organization .
+
+    vargen:dendroAssoc a prov:Association ;
+        prov:agent var:dendrometer ;
+        prov:hadPlan var:dendroPlan .
+
+    vargen:readingData a prov:Entity,
+            "DendrometerReading"^^xsd:string ;
+        ex:comment var:comment ;
+        tmpl:linked vargen:readingActivity ;
+        prov:value var:readValue ;
+        prov:wasAttributedTo var:readingAgent ;
+        prov:wasDerivedFrom vargen:measurementData ;
+        prov:wasGeneratedBy vargen:readingActivity .
+
+    var:readingAgent a prov:Agent,
+            prov:Person ;
+        prov:actedOnBehalfOf var:organization .
+
+    vargen:measuringActivity a prov:Activity,
+            "DendrometerMeasurementActivity"^^xsd:string ;
+        tmpl:linked var:dendrometer ;
+        prov:atLocation var:tree ;
+        prov:qualifiedAssociation vargen:dendroAssoc .
+
+    vargen:readingActivity a prov:Activity,
+            "DendrometerReadingActivity"^^xsd:string ;
+        tmpl:linked vargen:measurementData ;
+        prov:atLocation var:dendrometer ;
+        prov:used vargen:measurementData ;
+        prov:wasAssociatedWith var:readingAgent .
+
+    var:dendrometer a prov:Agent,
+            "Dendrometer"^^xsd:string .
+
+    vargen:measurementData a prov:Entity,
+            "DendrometerMeasurement"^^xsd:string ;
+        tmpl:linked vargen:measuringActivity ;
+        prov:wasGeneratedBy vargen:measuringActivity .
+}
+
+
+here inst templ
+here set namespace
+Here add recs
+roots: [<QualifiedName: var:dendrometer>]
+dependents: [<QualifiedName: vargen:measurementData>, <QualifiedName: vargen:readingData>, <QualifiedName: vargen:readingActivity>, <QualifiedName: vargen:measuringActivity>]
+intermediates: [<QualifiedName: vargen:measuringActivity>, <QualifiedName: vargen:readingActivity>, <QualifiedName: vargen:measurementData>]
+root: var:dendrometer
+u'vargen:readingData'
+<QualifiedName: vargen:readingData>
+same
+0
+u'vargen:measuringActivity'
+<QualifiedName: vargen:measuringActivity>
+same
+0
+u'vargen:readingActivity'
+<QualifiedName: vargen:readingActivity>
+same
+0
+u'vargen:measurementData'
+<QualifiedName: vargen:measurementData>
+same
+0
+[<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>]
+<QualifiedName: var:dendrometer>
+0
+{<QualifiedName: var:organization>: 5, <QualifiedName: vargen:readingData>: 4, <QualifiedName: vargen:measuringActivity>: 1, <QualifiedName: var:dataset>: 5, <QualifiedName: vargen:readingActivity>: 3, <QualifiedName: var:readingAgent>: 5, <QualifiedName: vargen:measurementData>: 2, <QualifiedName: var:dendroPlan>: 5, <QualifiedName: var:dendrometer>: 0}
+SORT : var:dendrometer
+SORT : vargen:measuringActivity
+SORT : vargen:measurementData
+SORT : vargen:readingActivity
+SORT : vargen:readingData
+SORT : var:organization
+SORT : var:dataset
+SORT : var:readingAgent
+SORT : var:dendroPlan
+[(<QualifiedName: prov:type>, u'Dendrometer')]
+{'var:tree': [<QualifiedName: ex:5011>, <QualifiedName: ex:5001>, <QualifiedName: ex:5228>, <QualifiedName: ex:5005>, <QualifiedName: ex:5004>, <QualifiedName: ex:5222>, <QualifiedName: ex:5232>, <QualifiedName: ex:5227>, <QualifiedName: ex:5229>, <QualifiedName: ex:5225>, <QualifiedName: ex:5141>, <QualifiedName: ex:5073>, <QualifiedName: ex:5124>, <QualifiedName: ex:5136>, <QualifiedName: ex:5012%20neu>, <QualifiedName: ex:5097>, <QualifiedName: ex:5106>, <QualifiedName: ex:5074>], 'var:readValue': ['43', '6.5', '33.4', '28.8', '23.6', '29.4', '28.6', '38.4', '11.6', '34', '18.3', '53.4', '32', '33', '38', '10', '61.8', '52'], 'var:dendrometer': [<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>], 'var:readingAgent': [<QualifiedName: ex:Kettenhummer>, <QualifiedName: ex:Groi%C3%9F>], 'var:endDate': ['2018-03-21T00:00:00'], 'var:comment': ['nein']}
+[<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>]
+[(<QualifiedName: prov:type>, u'DendrometerMeasurementActivity'), (<QualifiedName: prov:location>, <QualifiedName: var:tree>), (<QualifiedName: tmpl:linked>, <QualifiedName: var:dendrometer>)]
+{'var:tree': [<QualifiedName: ex:5011>, <QualifiedName: ex:5001>, <QualifiedName: ex:5228>, <QualifiedName: ex:5005>, <QualifiedName: ex:5004>, <QualifiedName: ex:5222>, <QualifiedName: ex:5232>, <QualifiedName: ex:5227>, <QualifiedName: ex:5229>, <QualifiedName: ex:5225>, <QualifiedName: ex:5141>, <QualifiedName: ex:5073>, <QualifiedName: ex:5124>, <QualifiedName: ex:5136>, <QualifiedName: ex:5012%20neu>, <QualifiedName: ex:5097>, <QualifiedName: ex:5106>, <QualifiedName: ex:5074>], 'var:readValue': ['43', '6.5', '33.4', '28.8', '23.6', '29.4', '28.6', '38.4', '11.6', '34', '18.3', '53.4', '32', '33', '38', '10', '61.8', '52'], 'var:dendrometer': [<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>], 'var:readingAgent': [<QualifiedName: ex:Kettenhummer>, <QualifiedName: ex:Groi%C3%9F>], 'var:endDate': ['2018-03-21T00:00:00'], u'vargen:measuringActivity': [<QualifiedName: ex:3b871224-c4a4-498f-9095-d4515dd2f41a>, <QualifiedName: ex:97de5845-5021-4467-a597-e86ba1ed14ff>, <QualifiedName: ex:daeb6ab6-d6a8-457a-87fc-154a8c4704d6>, <QualifiedName: ex:7dc5f2a6-8e6a-4420-bfc2-8f8c8b87a738>, <QualifiedName: ex:6b566fbd-e6c5-4322-93e6-a66132af8012>, <QualifiedName: ex:d99f4a1f-be0b-40d3-88ac-8a0676c3e448>, <QualifiedName: ex:ee92afbd-0eef-4538-a314-4c154282ea3c>, <QualifiedName: ex:0c686b09-482d-43ed-b771-ba5f5d90583f>, <QualifiedName: ex:16ce6682-8331-40cb-ba81-7e951b0ef003>, <QualifiedName: ex:b699f53d-055e-4c49-be04-e509902b1538>, <QualifiedName: ex:c30a7798-b20e-4dae-a6b3-899c9a3e9207>, <QualifiedName: ex:4cc10cc6-8fdd-42e0-adfa-bf7b4278121d>, <QualifiedName: ex:8f229494-363e-43a1-bd15-5dd19b26f42d>, <QualifiedName: ex:5ac0d26e-f9ea-4829-b198-3e2c1eb89059>, <QualifiedName: ex:ca80f198-96ca-482c-b051-5e9418630c27>, <QualifiedName: ex:f3ffb583-8c3c-45fd-a2ac-978dbd7d4e2f>, <QualifiedName: ex:ad64314e-451c-44e5-8a6f-9d3eb6c9a6a7>, <QualifiedName: ex:426788e8-dcb0-48a1-90ca-bef524299a3e>], 'var:comment': ['nein']}
+[<QualifiedName: ex:3b871224-c4a4-498f-9095-d4515dd2f41a>, <QualifiedName: ex:97de5845-5021-4467-a597-e86ba1ed14ff>, <QualifiedName: ex:daeb6ab6-d6a8-457a-87fc-154a8c4704d6>, <QualifiedName: ex:7dc5f2a6-8e6a-4420-bfc2-8f8c8b87a738>, <QualifiedName: ex:6b566fbd-e6c5-4322-93e6-a66132af8012>, <QualifiedName: ex:d99f4a1f-be0b-40d3-88ac-8a0676c3e448>, <QualifiedName: ex:ee92afbd-0eef-4538-a314-4c154282ea3c>, <QualifiedName: ex:0c686b09-482d-43ed-b771-ba5f5d90583f>, <QualifiedName: ex:16ce6682-8331-40cb-ba81-7e951b0ef003>, <QualifiedName: ex:b699f53d-055e-4c49-be04-e509902b1538>, <QualifiedName: ex:c30a7798-b20e-4dae-a6b3-899c9a3e9207>, <QualifiedName: ex:4cc10cc6-8fdd-42e0-adfa-bf7b4278121d>, <QualifiedName: ex:8f229494-363e-43a1-bd15-5dd19b26f42d>, <QualifiedName: ex:5ac0d26e-f9ea-4829-b198-3e2c1eb89059>, <QualifiedName: ex:ca80f198-96ca-482c-b051-5e9418630c27>, <QualifiedName: ex:f3ffb583-8c3c-45fd-a2ac-978dbd7d4e2f>, <QualifiedName: ex:ad64314e-451c-44e5-8a6f-9d3eb6c9a6a7>, <QualifiedName: ex:426788e8-dcb0-48a1-90ca-bef524299a3e>]
+[(<QualifiedName: prov:type>, u'DendrometerMeasurement'), (<QualifiedName: tmpl:linked>, <QualifiedName: vargen:measuringActivity>)]
+{'var:tree': [<QualifiedName: ex:5011>, <QualifiedName: ex:5001>, <QualifiedName: ex:5228>, <QualifiedName: ex:5005>, <QualifiedName: ex:5004>, <QualifiedName: ex:5222>, <QualifiedName: ex:5232>, <QualifiedName: ex:5227>, <QualifiedName: ex:5229>, <QualifiedName: ex:5225>, <QualifiedName: ex:5141>, <QualifiedName: ex:5073>, <QualifiedName: ex:5124>, <QualifiedName: ex:5136>, <QualifiedName: ex:5012%20neu>, <QualifiedName: ex:5097>, <QualifiedName: ex:5106>, <QualifiedName: ex:5074>], 'var:readValue': ['43', '6.5', '33.4', '28.8', '23.6', '29.4', '28.6', '38.4', '11.6', '34', '18.3', '53.4', '32', '33', '38', '10', '61.8', '52'], 'var:dendrometer': [<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>], 'var:readingAgent': [<QualifiedName: ex:Kettenhummer>, <QualifiedName: ex:Groi%C3%9F>], 'var:endDate': ['2018-03-21T00:00:00'], u'vargen:measurementData': [<QualifiedName: ex:16e70f70-4361-4722-80b9-87b6c1401257>, <QualifiedName: ex:7ba6cfbc-4129-4715-b422-1029b2e5bc44>, <QualifiedName: ex:82192307-2e12-490d-9a0d-b54369d48f6a>, <QualifiedName: ex:2b16effb-6eff-4194-9009-7fc1639383bf>, <QualifiedName: ex:7816b013-a1ab-48df-af8d-81dbde4a5f68>, <QualifiedName: ex:f5c7ed09-aa8c-4e74-af4b-580a921d3814>, <QualifiedName: ex:54087fe2-9be5-440e-b996-d605638c3dd1>, <QualifiedName: ex:d76a935b-e113-4c99-8e89-ac0d265be9d8>, <QualifiedName: ex:30ef20a8-e8cb-47ac-ad68-2ddfcea53889>, <QualifiedName: ex:5d4e6c30-c9b9-4d3c-a648-f5388ba2459a>, <QualifiedName: ex:46a45166-c7d0-4e80-9252-df8cb4fe20cf>, <QualifiedName: ex:eed583c7-7362-46a3-a3f2-9a7c7025da75>, <QualifiedName: ex:a5bf96ae-3326-4ec6-b597-e58b656d94b3>, <QualifiedName: ex:e627a6b1-63e0-4d36-8c2d-a6681fbbe316>, <QualifiedName: ex:473bc4d4-5155-4c4b-975e-771d2b4b0338>, <QualifiedName: ex:e1f08ed6-b51d-4aa6-8d72-9ee3874bad63>, <QualifiedName: ex:fb98ec45-07e5-4427-9866-24fc2c2a2e0e>, <QualifiedName: ex:caa214cf-24f9-4123-b599-eb817d69b2e3>], u'vargen:measuringActivity': [<QualifiedName: ex:3b871224-c4a4-498f-9095-d4515dd2f41a>, <QualifiedName: ex:97de5845-5021-4467-a597-e86ba1ed14ff>, <QualifiedName: ex:daeb6ab6-d6a8-457a-87fc-154a8c4704d6>, <QualifiedName: ex:7dc5f2a6-8e6a-4420-bfc2-8f8c8b87a738>, <QualifiedName: ex:6b566fbd-e6c5-4322-93e6-a66132af8012>, <QualifiedName: ex:d99f4a1f-be0b-40d3-88ac-8a0676c3e448>, <QualifiedName: ex:ee92afbd-0eef-4538-a314-4c154282ea3c>, <QualifiedName: ex:0c686b09-482d-43ed-b771-ba5f5d90583f>, <QualifiedName: ex:16ce6682-8331-40cb-ba81-7e951b0ef003>, <QualifiedName: ex:b699f53d-055e-4c49-be04-e509902b1538>, <QualifiedName: ex:c30a7798-b20e-4dae-a6b3-899c9a3e9207>, <QualifiedName: ex:4cc10cc6-8fdd-42e0-adfa-bf7b4278121d>, <QualifiedName: ex:8f229494-363e-43a1-bd15-5dd19b26f42d>, <QualifiedName: ex:5ac0d26e-f9ea-4829-b198-3e2c1eb89059>, <QualifiedName: ex:ca80f198-96ca-482c-b051-5e9418630c27>, <QualifiedName: ex:f3ffb583-8c3c-45fd-a2ac-978dbd7d4e2f>, <QualifiedName: ex:ad64314e-451c-44e5-8a6f-9d3eb6c9a6a7>, <QualifiedName: ex:426788e8-dcb0-48a1-90ca-bef524299a3e>], 'var:comment': ['nein']}
+[<QualifiedName: ex:16e70f70-4361-4722-80b9-87b6c1401257>, <QualifiedName: ex:7ba6cfbc-4129-4715-b422-1029b2e5bc44>, <QualifiedName: ex:82192307-2e12-490d-9a0d-b54369d48f6a>, <QualifiedName: ex:2b16effb-6eff-4194-9009-7fc1639383bf>, <QualifiedName: ex:7816b013-a1ab-48df-af8d-81dbde4a5f68>, <QualifiedName: ex:f5c7ed09-aa8c-4e74-af4b-580a921d3814>, <QualifiedName: ex:54087fe2-9be5-440e-b996-d605638c3dd1>, <QualifiedName: ex:d76a935b-e113-4c99-8e89-ac0d265be9d8>, <QualifiedName: ex:30ef20a8-e8cb-47ac-ad68-2ddfcea53889>, <QualifiedName: ex:5d4e6c30-c9b9-4d3c-a648-f5388ba2459a>, <QualifiedName: ex:46a45166-c7d0-4e80-9252-df8cb4fe20cf>, <QualifiedName: ex:eed583c7-7362-46a3-a3f2-9a7c7025da75>, <QualifiedName: ex:a5bf96ae-3326-4ec6-b597-e58b656d94b3>, <QualifiedName: ex:e627a6b1-63e0-4d36-8c2d-a6681fbbe316>, <QualifiedName: ex:473bc4d4-5155-4c4b-975e-771d2b4b0338>, <QualifiedName: ex:e1f08ed6-b51d-4aa6-8d72-9ee3874bad63>, <QualifiedName: ex:fb98ec45-07e5-4427-9866-24fc2c2a2e0e>, <QualifiedName: ex:caa214cf-24f9-4123-b599-eb817d69b2e3>]
+[(<QualifiedName: prov:type>, u'DendrometerReadingActivity'), (<QualifiedName: prov:location>, <QualifiedName: var:dendrometer>), (<QualifiedName: tmpl:linked>, <QualifiedName: vargen:measurementData>)]
+{'var:tree': [<QualifiedName: ex:5011>, <QualifiedName: ex:5001>, <QualifiedName: ex:5228>, <QualifiedName: ex:5005>, <QualifiedName: ex:5004>, <QualifiedName: ex:5222>, <QualifiedName: ex:5232>, <QualifiedName: ex:5227>, <QualifiedName: ex:5229>, <QualifiedName: ex:5225>, <QualifiedName: ex:5141>, <QualifiedName: ex:5073>, <QualifiedName: ex:5124>, <QualifiedName: ex:5136>, <QualifiedName: ex:5012%20neu>, <QualifiedName: ex:5097>, <QualifiedName: ex:5106>, <QualifiedName: ex:5074>], 'var:readValue': ['43', '6.5', '33.4', '28.8', '23.6', '29.4', '28.6', '38.4', '11.6', '34', '18.3', '53.4', '32', '33', '38', '10', '61.8', '52'], 'var:dendrometer': [<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>], 'var:readingAgent': [<QualifiedName: ex:Kettenhummer>, <QualifiedName: ex:Groi%C3%9F>], 'var:endDate': ['2018-03-21T00:00:00'], u'vargen:measurementData': [<QualifiedName: ex:16e70f70-4361-4722-80b9-87b6c1401257>, <QualifiedName: ex:7ba6cfbc-4129-4715-b422-1029b2e5bc44>, <QualifiedName: ex:82192307-2e12-490d-9a0d-b54369d48f6a>, <QualifiedName: ex:2b16effb-6eff-4194-9009-7fc1639383bf>, <QualifiedName: ex:7816b013-a1ab-48df-af8d-81dbde4a5f68>, <QualifiedName: ex:f5c7ed09-aa8c-4e74-af4b-580a921d3814>, <QualifiedName: ex:54087fe2-9be5-440e-b996-d605638c3dd1>, <QualifiedName: ex:d76a935b-e113-4c99-8e89-ac0d265be9d8>, <QualifiedName: ex:30ef20a8-e8cb-47ac-ad68-2ddfcea53889>, <QualifiedName: ex:5d4e6c30-c9b9-4d3c-a648-f5388ba2459a>, <QualifiedName: ex:46a45166-c7d0-4e80-9252-df8cb4fe20cf>, <QualifiedName: ex:eed583c7-7362-46a3-a3f2-9a7c7025da75>, <QualifiedName: ex:a5bf96ae-3326-4ec6-b597-e58b656d94b3>, <QualifiedName: ex:e627a6b1-63e0-4d36-8c2d-a6681fbbe316>, <QualifiedName: ex:473bc4d4-5155-4c4b-975e-771d2b4b0338>, <QualifiedName: ex:e1f08ed6-b51d-4aa6-8d72-9ee3874bad63>, <QualifiedName: ex:fb98ec45-07e5-4427-9866-24fc2c2a2e0e>, <QualifiedName: ex:caa214cf-24f9-4123-b599-eb817d69b2e3>], u'vargen:measuringActivity': [<QualifiedName: ex:3b871224-c4a4-498f-9095-d4515dd2f41a>, <QualifiedName: ex:97de5845-5021-4467-a597-e86ba1ed14ff>, <QualifiedName: ex:daeb6ab6-d6a8-457a-87fc-154a8c4704d6>, <QualifiedName: ex:7dc5f2a6-8e6a-4420-bfc2-8f8c8b87a738>, <QualifiedName: ex:6b566fbd-e6c5-4322-93e6-a66132af8012>, <QualifiedName: ex:d99f4a1f-be0b-40d3-88ac-8a0676c3e448>, <QualifiedName: ex:ee92afbd-0eef-4538-a314-4c154282ea3c>, <QualifiedName: ex:0c686b09-482d-43ed-b771-ba5f5d90583f>, <QualifiedName: ex:16ce6682-8331-40cb-ba81-7e951b0ef003>, <QualifiedName: ex:b699f53d-055e-4c49-be04-e509902b1538>, <QualifiedName: ex:c30a7798-b20e-4dae-a6b3-899c9a3e9207>, <QualifiedName: ex:4cc10cc6-8fdd-42e0-adfa-bf7b4278121d>, <QualifiedName: ex:8f229494-363e-43a1-bd15-5dd19b26f42d>, <QualifiedName: ex:5ac0d26e-f9ea-4829-b198-3e2c1eb89059>, <QualifiedName: ex:ca80f198-96ca-482c-b051-5e9418630c27>, <QualifiedName: ex:f3ffb583-8c3c-45fd-a2ac-978dbd7d4e2f>, <QualifiedName: ex:ad64314e-451c-44e5-8a6f-9d3eb6c9a6a7>, <QualifiedName: ex:426788e8-dcb0-48a1-90ca-bef524299a3e>], u'vargen:readingActivity': [<QualifiedName: ex:7a902aaa-ed41-435a-aefd-c199b82105d4>, <QualifiedName: ex:f0920814-3ed8-4103-9d2a-7dc310847d9a>, <QualifiedName: ex:00eb099a-fcf6-4305-aa57-779ccdc0d910>, <QualifiedName: ex:67687092-8060-4f04-835d-3faba9112569>, <QualifiedName: ex:df2095ec-d539-4230-94db-7e0a47c783df>, <QualifiedName: ex:f66c97c6-b6ce-426b-9e5f-18df20c27dab>, <QualifiedName: ex:3deaeb70-9a88-42a3-a001-50a2fbf60378>, <QualifiedName: ex:dd6e1e18-f3c2-40d9-9299-a28ea36c3762>, <QualifiedName: ex:e1f8a2ad-75aa-46a3-ad5d-ce10856512fb>, <QualifiedName: ex:3a841bb3-7bd4-43ad-97c9-1f9171adcccd>, <QualifiedName: ex:8b0cddf8-fc3c-4d41-a22a-506d82656642>, <QualifiedName: ex:0af463d9-9455-4060-8074-800e639b7ea8>, <QualifiedName: ex:63ddd14e-47b1-4a6c-bee7-31aa4f8e43f1>, <QualifiedName: ex:d522a60c-6365-4581-bd64-7585d7ec5a4f>, <QualifiedName: ex:495eab63-4835-41e5-888f-69ac74eb8990>, <QualifiedName: ex:2577e3f3-4907-4d68-975e-f8eb49ab30a0>, <QualifiedName: ex:30502a6c-e872-4935-82ec-371f29341f1f>, <QualifiedName: ex:5ec9396e-5332-4762-8e74-db2addd6c2ad>], 'var:comment': ['nein']}
+[<QualifiedName: ex:7a902aaa-ed41-435a-aefd-c199b82105d4>, <QualifiedName: ex:f0920814-3ed8-4103-9d2a-7dc310847d9a>, <QualifiedName: ex:00eb099a-fcf6-4305-aa57-779ccdc0d910>, <QualifiedName: ex:67687092-8060-4f04-835d-3faba9112569>, <QualifiedName: ex:df2095ec-d539-4230-94db-7e0a47c783df>, <QualifiedName: ex:f66c97c6-b6ce-426b-9e5f-18df20c27dab>, <QualifiedName: ex:3deaeb70-9a88-42a3-a001-50a2fbf60378>, <QualifiedName: ex:dd6e1e18-f3c2-40d9-9299-a28ea36c3762>, <QualifiedName: ex:e1f8a2ad-75aa-46a3-ad5d-ce10856512fb>, <QualifiedName: ex:3a841bb3-7bd4-43ad-97c9-1f9171adcccd>, <QualifiedName: ex:8b0cddf8-fc3c-4d41-a22a-506d82656642>, <QualifiedName: ex:0af463d9-9455-4060-8074-800e639b7ea8>, <QualifiedName: ex:63ddd14e-47b1-4a6c-bee7-31aa4f8e43f1>, <QualifiedName: ex:d522a60c-6365-4581-bd64-7585d7ec5a4f>, <QualifiedName: ex:495eab63-4835-41e5-888f-69ac74eb8990>, <QualifiedName: ex:2577e3f3-4907-4d68-975e-f8eb49ab30a0>, <QualifiedName: ex:30502a6c-e872-4935-82ec-371f29341f1f>, <QualifiedName: ex:5ec9396e-5332-4762-8e74-db2addd6c2ad>]
+[(<QualifiedName: prov:type>, u'DendrometerReading'), (<QualifiedName: tmpl:linked>, <QualifiedName: vargen:readingActivity>), (<QualifiedName: ex:comment>, <QualifiedName: var:comment>), (<QualifiedName: prov:value>, <QualifiedName: var:readValue>)]
+{'var:tree': [<QualifiedName: ex:5011>, <QualifiedName: ex:5001>, <QualifiedName: ex:5228>, <QualifiedName: ex:5005>, <QualifiedName: ex:5004>, <QualifiedName: ex:5222>, <QualifiedName: ex:5232>, <QualifiedName: ex:5227>, <QualifiedName: ex:5229>, <QualifiedName: ex:5225>, <QualifiedName: ex:5141>, <QualifiedName: ex:5073>, <QualifiedName: ex:5124>, <QualifiedName: ex:5136>, <QualifiedName: ex:5012%20neu>, <QualifiedName: ex:5097>, <QualifiedName: ex:5106>, <QualifiedName: ex:5074>], 'var:readValue': ['43', '6.5', '33.4', '28.8', '23.6', '29.4', '28.6', '38.4', '11.6', '34', '18.3', '53.4', '32', '33', '38', '10', '61.8', '52'], 'var:dendrometer': [<QualifiedName: ex:29>, <QualifiedName: ex:27>, <QualifiedName: ex:22>, <QualifiedName: ex:23>, <QualifiedName: ex:31>, <QualifiedName: ex:21>, <QualifiedName: ex:34>, <QualifiedName: ex:20>, <QualifiedName: ex:33>, <QualifiedName: ex:35>, <QualifiedName: ex:28>, <QualifiedName: ex:25>, <QualifiedName: ex:26>, <QualifiedName: ex:24>, <QualifiedName: ex:19>, <QualifiedName: ex:32>, <QualifiedName: ex:30>, <QualifiedName: ex:36>], 'var:readingAgent': [<QualifiedName: ex:Kettenhummer>, <QualifiedName: ex:Groi%C3%9F>], 'var:endDate': ['2018-03-21T00:00:00'], u'vargen:measurementData': [<QualifiedName: ex:16e70f70-4361-4722-80b9-87b6c1401257>, <QualifiedName: ex:7ba6cfbc-4129-4715-b422-1029b2e5bc44>, <QualifiedName: ex:82192307-2e12-490d-9a0d-b54369d48f6a>, <QualifiedName: ex:2b16effb-6eff-4194-9009-7fc1639383bf>, <QualifiedName: ex:7816b013-a1ab-48df-af8d-81dbde4a5f68>, <QualifiedName: ex:f5c7ed09-aa8c-4e74-af4b-580a921d3814>, <QualifiedName: ex:54087fe2-9be5-440e-b996-d605638c3dd1>, <QualifiedName: ex:d76a935b-e113-4c99-8e89-ac0d265be9d8>, <QualifiedName: ex:30ef20a8-e8cb-47ac-ad68-2ddfcea53889>, <QualifiedName: ex:5d4e6c30-c9b9-4d3c-a648-f5388ba2459a>, <QualifiedName: ex:46a45166-c7d0-4e80-9252-df8cb4fe20cf>, <QualifiedName: ex:eed583c7-7362-46a3-a3f2-9a7c7025da75>, <QualifiedName: ex:a5bf96ae-3326-4ec6-b597-e58b656d94b3>, <QualifiedName: ex:e627a6b1-63e0-4d36-8c2d-a6681fbbe316>, <QualifiedName: ex:473bc4d4-5155-4c4b-975e-771d2b4b0338>, <QualifiedName: ex:e1f08ed6-b51d-4aa6-8d72-9ee3874bad63>, <QualifiedName: ex:fb98ec45-07e5-4427-9866-24fc2c2a2e0e>, <QualifiedName: ex:caa214cf-24f9-4123-b599-eb817d69b2e3>], u'vargen:measuringActivity': [<QualifiedName: ex:3b871224-c4a4-498f-9095-d4515dd2f41a>, <QualifiedName: ex:97de5845-5021-4467-a597-e86ba1ed14ff>, <QualifiedName: ex:daeb6ab6-d6a8-457a-87fc-154a8c4704d6>, <QualifiedName: ex:7dc5f2a6-8e6a-4420-bfc2-8f8c8b87a738>, <QualifiedName: ex:6b566fbd-e6c5-4322-93e6-a66132af8012>, <QualifiedName: ex:d99f4a1f-be0b-40d3-88ac-8a0676c3e448>, <QualifiedName: ex:ee92afbd-0eef-4538-a314-4c154282ea3c>, <QualifiedName: ex:0c686b09-482d-43ed-b771-ba5f5d90583f>, <QualifiedName: ex:16ce6682-8331-40cb-ba81-7e951b0ef003>, <QualifiedName: ex:b699f53d-055e-4c49-be04-e509902b1538>, <QualifiedName: ex:c30a7798-b20e-4dae-a6b3-899c9a3e9207>, <QualifiedName: ex:4cc10cc6-8fdd-42e0-adfa-bf7b4278121d>, <QualifiedName: ex:8f229494-363e-43a1-bd15-5dd19b26f42d>, <QualifiedName: ex:5ac0d26e-f9ea-4829-b198-3e2c1eb89059>, <QualifiedName: ex:ca80f198-96ca-482c-b051-5e9418630c27>, <QualifiedName: ex:f3ffb583-8c3c-45fd-a2ac-978dbd7d4e2f>, <QualifiedName: ex:ad64314e-451c-44e5-8a6f-9d3eb6c9a6a7>, <QualifiedName: ex:426788e8-dcb0-48a1-90ca-bef524299a3e>], u'vargen:readingActivity': [<QualifiedName: ex:7a902aaa-ed41-435a-aefd-c199b82105d4>, <QualifiedName: ex:f0920814-3ed8-4103-9d2a-7dc310847d9a>, <QualifiedName: ex:00eb099a-fcf6-4305-aa57-779ccdc0d910>, <QualifiedName: ex:67687092-8060-4f04-835d-3faba9112569>, <QualifiedName: ex:df2095ec-d539-4230-94db-7e0a47c783df>, <QualifiedName: ex:f66c97c6-b6ce-426b-9e5f-18df20c27dab>, <QualifiedName: ex:3deaeb70-9a88-42a3-a001-50a2fbf60378>, <QualifiedName: ex:dd6e1e18-f3c2-40d9-9299-a28ea36c3762>, <QualifiedName: ex:e1f8a2ad-75aa-46a3-ad5d-ce10856512fb>, <QualifiedName: ex:3a841bb3-7bd4-43ad-97c9-1f9171adcccd>, <QualifiedName: ex:8b0cddf8-fc3c-4d41-a22a-506d82656642>, <QualifiedName: ex:0af463d9-9455-4060-8074-800e639b7ea8>, <QualifiedName: ex:63ddd14e-47b1-4a6c-bee7-31aa4f8e43f1>, <QualifiedName: ex:d522a60c-6365-4581-bd64-7585d7ec5a4f>, <QualifiedName: ex:495eab63-4835-41e5-888f-69ac74eb8990>, <QualifiedName: ex:2577e3f3-4907-4d68-975e-f8eb49ab30a0>, <QualifiedName: ex:30502a6c-e872-4935-82ec-371f29341f1f>, <QualifiedName: ex:5ec9396e-5332-4762-8e74-db2addd6c2ad>], 'var:comment': ['nein'], u'vargen:readingData': [<QualifiedName: ex:2f717fe5-8f72-4e71-ac78-c28642270a5c>, <QualifiedName: ex:f861d17c-9af0-4897-993a-f350a7ab18db>, <QualifiedName: ex:3daa5d9f-87d6-4181-b058-e90690461ca0>, <QualifiedName: ex:42f5da0e-ec08-453f-a5c6-539ee028b0cc>, <QualifiedName: ex:71f6a033-bb65-4a69-834b-aeb4b54a28ef>, <QualifiedName: ex:7067b07c-4d5a-4ef6-9a31-1645fa676a0b>, <QualifiedName: ex:38083e46-7cca-4371-ae4c-b8f17c2920df>, <QualifiedName: ex:00e3097f-b06f-424f-9224-f8c682d6eea1>, <QualifiedName: ex:c94a674e-2944-4583-a259-de2245744a21>, <QualifiedName: ex:6a1bbe07-b1b7-4892-b2d5-c58fdc1ab3b1>, <QualifiedName: ex:b980ca25-a3a2-4a69-8228-d767a0e76bcc>, <QualifiedName: ex:053acf5b-6154-467d-ac29-b0cde4fcd635>, <QualifiedName: ex:b79fd78d-83b3-4af3-883c-a5dbed459246>, <QualifiedName: ex:a374cfa5-4712-44cd-aff0-6207756ed8c4>, <QualifiedName: ex:0ae2b307-87f9-4b4e-8f2e-225583db774e>, <QualifiedName: ex:36dd7d6a-93fd-484d-a71e-ee40f145240a>, <QualifiedName: ex:ce5ffd13-b673-40d5-970c-0499d2f93cb2>, <QualifiedName: ex:adaa90ff-a9b1-49c2-94fb-da2821d9a4b0>]}
+[<QualifiedName: ex:2f717fe5-8f72-4e71-ac78-c28642270a5c>, <QualifiedName: ex:f861d17c-9af0-4897-993a-f350a7ab18db>, <QualifiedName: ex:3daa5d9f-87d6-4181-b058-e90690461ca0>, <QualifiedName: ex:42f5da0e-ec08-453f-a5c6-539ee028b0cc>, <QualifiedName: ex:71f6a033-bb65-4a69-834b-aeb4b54a28ef>, <QualifiedName: ex:7067b07c-4d5a-4ef6-9a31-1645fa676a0b>, <QualifiedName: ex:38083e46-7cca-4371-ae4c-b8f17c2920df>, <QualifiedName: ex:00e3097f-b06f-424f-9224-f8c682d6eea1>, <QualifiedName: ex:c94a674e-2944-4583-a259-de2245744a21>, <QualifiedName: ex:6a1bbe07-b1b7-4892-b2d5-c58fdc1ab3b1>, <QualifiedName: ex:b980ca25-a3a2-4a69-8228-d767a0e76bcc>, <QualifiedName: ex:053acf5b-6154-467d-ac29-b0cde4fcd635>, <QualifiedName: ex:b79fd78d-83b3-4af3-883c-a5dbed459246>, <QualifiedName: ex:a374cfa5-4712-44cd-aff0-6207756ed8c4>, <QualifiedName: ex:0ae2b307-87f9-4b4e-8f2e-225583db774e>, <QualifiedName: ex:36dd7d6a-93fd-484d-a71e-ee40f145240a>, <QualifiedName: ex:ce5ffd13-b673-40d5-970c-0499d2f93cb2>, <QualifiedName: ex:adaa90ff-a9b1-49c2-94fb-da2821d9a4b0>]
