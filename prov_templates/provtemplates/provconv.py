@@ -31,7 +31,7 @@ History:
         + support for provdocs without bundles
       - version 0.5    (...)  
         + application to concrete ENES use case
-      - version 0.6    (28.8.2018)
+      - version 0.6    (28.8.2018, Doron Goldfarb)
 	+ support tmpl:linked
 	+ support vargen: namespace for auto generated uuids
 	+ support expansion for relations (experimental)
