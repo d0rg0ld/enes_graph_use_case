@@ -1,0 +1,10 @@
+*.comp
+*.pyc
+*.brk
+*.swp
+*.png
+*.rdf
+*.provn
+*.ttl
+*.json
+*.txt

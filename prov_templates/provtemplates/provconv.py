@@ -58,11 +58,30 @@ Package provides:
 
 
 import prov.model as prov
+import prov as provbase
 import six      
 import itertools
 import uuid
 import sys
 import collections
+
+
+GLOBAL_UUID_NS=prov.Namespace("ex_uuid", "http://example.com/uuid#")
+
+class UnknownRelationException(Exception):
+	pass
+
+class BindingFileException(Exception):
+	pass
+
+class UnboundMandatoryVariableException(Exception):
+	pass
+
+class IncorrectNumberOfBindingsForGroupVariable(Exception):
+	pass
+
+class IncorrectNumberOfBindingsForStatementVariable(Exception):
+	pass
 
 def set_namespaces(ns, prov_doc):
     '''
@@ -74,7 +93,6 @@ def set_namespaces(ns, prov_doc):
         Prov document (or bundle) instance with namespaces set
     '''    
     
-    print("here set namespace")
     
     if isinstance(ns,dict):  
         for (sn,ln) in ns.items():
@@ -83,6 +101,87 @@ def set_namespaces(ns, prov_doc):
         for nsi in ns:
             prov_doc.add_namespace(nsi)     
     return prov_doc  
+
+def read_binding(binding_file):
+	'''
+	read PROV binding file and create dict object
+
+	Args:
+		Name of binding file
+	Return:
+		binding_dict_out
+	'''
+
+	bindings_doc=provbase.read(binding_file)
+
+	binding_dict=dict()
+
+	for r in bindings_doc.records:
+		#simple validation: every entity must be in "var", "vargen" namespace
+		if r.identifier.namespace.prefix in ["var", "vargen"]:
+			#make dicts first
+			#we want dumb dicts
+			key=r.identifier._str
+			binding_dict[key]=dict()
+			for a in r.attributes:
+				#print str(r.identifier) + "    " + str(a)
+				#simple validation: every entity must be in "tmpl" namespace
+				if a[0].namespace.prefix in ["tmpl"]:	
+					#two cases of bindings, attr and entity
+					toks=a[0].localpart.split("_")
+					if "2dvalue" == a[0].localpart[:7]:
+						if int(toks[1]) not in binding_dict[key]:
+							binding_dict[key][int(toks[1])]=dict()
+						binding_dict[key][int(toks[1])][int(toks[2])]=a[1]
+					elif "value" == a[0].localpart[:5]:
+						binding_dict[key][int(toks[1])]=a[1]
+					else:
+						raise BindingFileException("Encountered unknown property " + str(a) + \
+										" in bindings file " + binding_file) 
+				else:
+					raise BindingFileException("Encountered unknown property " + str(a) + \
+										" in bindings file " + binding_file) 
+		else:
+			raise BindingFileException("Encountered unknown entity ID " + str(r) + \
+							" in bindings file " + binding_file + ". Only var: or vargen: allowed as namespace.") 
+
+	#sanity checks: consistent numbering for attrs
+	binding_dict_out=dict()
+
+
+	def checkIdxRange(d):
+		idx=d.keys()
+		#print idx
+		idx.sort()
+		if min(idx) != 0 or idx != range(min(idx), max(idx) + 1):
+			raise BindingFileException("Invalid value sequence " + repr(d)  + " encountered in bindings file " + binding_file) 
+		return idx
+
+
+	for b in binding_dict:
+		#print repr(b)
+		idx=checkIdxRange(binding_dict[b])	
+		if not idx:
+			return	
+		binding_dict_out[b]=list()
+		for i in idx:
+			if isinstance(binding_dict[b][i], dict):
+				subidx=checkIdxRange(binding_dict[b][i])
+				if not subidx:
+					return
+				tmp=list()	
+				for i2 in subidx:
+					tmp.append(binding_dict[b][i][i2])
+				if len(tmp) > 1:
+					binding_dict_out[b].append(tmp)
+				else:
+					binding_dict_out[b].append(tmp[0])
+						
+			else:
+				binding_dict_out[b].append(binding_dict[b][i])
+			
+	return binding_dict_out
+	
 
 def make_binding(prov_doc,entity_dict,attr_dict):
     ''' 
@@ -164,7 +263,7 @@ def save_and_show(doc,filename):
         prints additionally provn serialization format    
     '''
     doc1 = make_prov(doc)
-    print(doc1.get_provn())
+    #print(doc1.get_provn())
 
     with open(filename+".provn", 'w') as provn_file:
         provn_file.write(doc1.get_provn())
@@ -175,48 +274,48 @@ def save_and_show(doc,filename):
     
     return doc1
 
-def make_rel(new_entity,rel, formalattrs):
+def make_rel(new_entity,rel,ident, formalattrs, otherAttrs):
 	    new_rel=None
 	    #handle expansion
-	    
+	    #print otherAttrs 
+		# YOU MUST CHECK THE NONE ATTRS !!!
+ 
             if rel.get_type() == prov.PROV_ATTRIBUTION:
-                new_rel = new_entity.wasAttributedTo(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasAttributedTo(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_ASSOCIATION:
-                new_rel = new_entity.wasAssociatedWith(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasAssociatedWith(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_DERIVATION:
-                new_rel = new_entity.wasDerivedFrom(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasDerivedFrom(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_DELEGATION:
-                new_rel = new_entity.actedOnBehalfOf(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.actedOnBehalfOf(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_GENERATION:
-                new_rel = new_entity.wasGeneratedBy(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasGeneratedBy(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_INFLUENCE:
-                new_rel = new_entity.wasInfluencedBy(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasInfluencedBy(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_COMMUNICATION:
-                new_rel = new_entity.wasInformedBy(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasInformedBy(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_USAGE:
-                new_rel = new_entity.used(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.used(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_MEMBERSHIP:
                 new_rel = new_entity.hadMember(*formalattrs)
-                #new_rel = new_entity.hadMember(other_attributes=rel.extra_attributes, *formalattrs)
+                #new_rel = new_entity.hadMember(other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_START:
-                new_rel = new_entity.wasStartedBy(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasStartedBy(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_END:
-                new_rel = new_entity.wasEndedBy(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasEndedBy(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_INVALIDATION:
-                new_rel = new_entity.wasInvalidatedBy(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.wasInvalidatedBy(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_ALTERNATE:
-                new_rel = new_entity.alternateOf(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.alternateOf(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             elif rel.get_type() == prov.PROV_SPECIALIZATION:
-                new_rel = new_entity.specializationOf(other_attributes=rel.extra_attributes, *formalattrs)
+                new_rel = new_entity.specializationOf(identifier=ident, other_attributes=otherAttrs, *formalattrs)
             else:
-                print("Warning! This relation is not yet supported. typeinfo: ",rel.get_type() )
-                # ToDo: unsufficient error handling for now .. 
-                new_rel = new_entity("ex:missing relation")
+		raise UnknownRelationException("Relation  " + rel.get_type() + " is not yet supported.")
 
 	    return new_rel
 	
 
-def set_rel(new_entity,rel,expAttr, linkedRelAttrs):
+def set_rel(new_entity,rel,idents, expAttr, linkedRelAttrs, otherAttrs):
     '''
        helper function to add specific relations according to relation type
        implements cartesian expansion only (no "linked" restrictions) by now
@@ -239,9 +338,9 @@ def set_rel(new_entity,rel,expAttr, linkedRelAttrs):
 	indexlists.append(ilist)
 		
 	
-    print repr(expAttr)
-    print repr(attrlists)
-    print repr(indexlists)
+    #print repr(expAttr)
+    #print repr(attrlists)
+    #print repr(indexlists)
 
     outLists=[]
     for a in attrlists:
@@ -251,10 +350,39 @@ def set_rel(new_entity,rel,expAttr, linkedRelAttrs):
     flatten = lambda arr: reduce(lambda x, y: ((isinstance(y, (list, tuple)) or x.append(y)) and x.extend(flatten(y))) or x, arr, [])
 
     idx=flatten(indexlists)	
-    for element in itertools.product(*outLists):
+    relList=itertools.product(*outLists)
+
+    #check identifier
+    # if var: namespace: unbound variable, ignore 
+    # if vargen: namespace : create uuid for each ele
+    # if not var and not vargen: if same number of idents as elements: iterate, else: fail
+    #print idents
+
+    getIdent=False
+    makeUUID=False
+    if idents:
+    	if isinstance(idents, list):
+	    if len(idents) != len(relList):
+		raise IncorrectNumberOfBindingsForStatementVariableException("Wrong number of idents for expanded rel " + repr(rel)) 
+	    getIdent=True
+    	elif "vargen:" in idents._str and idents._str[:7]=="vargen:":
+	    #make uuid for each
+	    makeUUID=True
+	elif "var:" in idents._str and idents._str[:4]=="var:":
+	    #make uuid for each
+	    idents=None
+
+    cnt=0
+    for element in relList:
 	out=flatten(element)
 	outordered=[out[i] for i in idx]	
-	make_rel(new_entity, rel, outordered)
+	if getIdent:
+		make_rel(new_entity, rel,idents[cnt], outordered, otherAttrs)
+	elif makeUUID:
+		make_rel(new_entity, rel, prov.QualifiedName(GLOBAL_UUID_NS, str(uuid.uuid4())), outordered, otherAttrs)
+	else:
+		make_rel(new_entity, rel,idents, outordered, otherAttrs)
+	cnt+=1
 
 
     #print linked
@@ -262,36 +390,6 @@ def set_rel(new_entity,rel,expAttr, linkedRelAttrs):
     #The maximum would be to produce the cartesian expansion of all sets in expAttr
 
     #return new_rel    
-
-def set_rel_o(new_entity,rel,nfirst,nsecond, linked=False):
-    '''
-       helper function to add specific relations according to relation type
-       implements cartesian expansion only (no "linked" restrictions) by now
-    '''    
-
-    #print linked
-
-    if not isinstance(nfirst,list):
-        nfirst = [nfirst]
-    if not isinstance(nsecond,list):
-        nsecond = [nsecond]
-   
-    if not linked: 
-    	# ToDo: bad programming style - make this more intuitive 
-    	nf = -1
-    	for aitem in nfirst: 
-    	    nf += 1
-    	    ns = -1
-    	    for bitem in nsecond: 
-    	        ns += 1
-    	        new_rel=make_rel(new_entity, rel ,nfirst[nf],nsecond[ns])
-    else:
-	nf=-1
-	for aitem in nfirst:
-		nf += 1
-		new_rel=make_rel(new_entity, rel, nfirst[nf],nsecond[nf])
-		
-    return new_rel    
 
 def checkLinked(nodes, instance_dict):
 
@@ -349,40 +447,43 @@ def checkLinked(nodes, instance_dict):
     offset=0
     for r in roots:
 	retval=dfs_levels(r, linkedDict, offset)
-	print "root: " + str(r)
-
+	#print "root: " + str(r)
+	#print retval
  	#get max rank
     	maxr=max(retval.values())	
 
 	# we need to check how many entries we have
 	maxEntries=0
     	for rec in nodes:
+		#print rec
 		if rec.identifier in retval:
 			eid = rec.identifier
-			neid = match(eid._str,instance_dict, False)
+			neid = match(eid,instance_dict, False)
+			#neid = match(eid._str,instance_dict, False)
 			#assume single instance bound to this node
 			length=0
 			if not isinstance(neid, list):
 				length=1
-			print repr(neid)
-			print repr(eid)
-			if neid==eid._str:
+			#print repr(neid)
+			#print repr(eid)
+			#if neid==eid._str:
+			if neid==eid:
 				# no match: if unassigned var or vargen variable, assume length 0
 				length=0
-				print "same"
+				#print "same"
 			if length>maxEntries:
 				maxEntries=length
-			print length
+			#print neid
 			if isinstance(neid,list):
 				# list is assigned to node, now all lengths must be equal
 				length=len(neid)
 				if length!=maxEntries:
 					if maxEntries>0:
-						print length
-						print maxEntries
-						print "Linked entities must have same number of bound instances!"
-						sys.exit(1)
+						#print length
+						#print maxEntries
+						raise IncorrectNumberOfBindingsForGroupVariable("Linked entities must have same number of bound instances!")
 					maxEntries=length
+			#print length
 	#	if rec.identifier not in combRoot:
 	#		retval[rec.identifier]=maxr+1
 
@@ -412,10 +513,10 @@ def checkLinked(nodes, instance_dict):
  
     fnc=lambda x: combRoot[x.identifier]
     nodes_sorted=sorted(nodes, key=fnc)
-    for rec in nodes_sorted:
-	print "SORT : " + str(rec.identifier)
+    #for rec in nodes_sorted:
+	#print "SORT : " + str(rec.identifier)
   
-    print repr(linkedGroups)
+    #print repr(linkedGroups)
 
     return { "nodes" : nodes_sorted, "numInstances" : numInstances, "linkedGroups" : linkedGroups}
 
@@ -461,7 +562,7 @@ def add_records(old_entity, new_entity, instance_dict):
     
     '''
     
-    print("Here add recs")
+    #print("Here add recs")
     
     relations = []
     nodes = []
@@ -494,6 +595,17 @@ def add_records(old_entity, new_entity, instance_dict):
 	#print eid._str
 	#dirty trick
         neid = match(eid._str,instance_dict, True, numInstances[eid])
+	#print repr(neid)
+	#print repr(eid)
+	
+	#IF no match found then this var is unbound. In case of entities, this is always an error according to
+	# https://provenance.ecs.soton.ac.uk/prov-template/#errors
+
+	if neid == eid._str:
+		if "var:" in eid._str and eid._str[:4]=="var:":
+			raise UnboundMandatoryVariableException("Variable " + eid._str + " at mandatory position is unbound.")
+
+
 	#print(repr(instance_dict))
         props = attr_match(attr,instance_dict)
 	#print "-------------------"
@@ -504,10 +616,17 @@ def add_records(old_entity, new_entity, instance_dict):
         if isinstance(neid,list):
             i = 0
             for n in neid: 
-                new_node = new_entity.entity(prov.Identifier(n),other_attributes=prop_select(props,i))
+                new_node = new_entity.entity(n,other_attributes=prop_select(props,i))
+                #new_node = new_entity.entity(prov.Identifier(n),other_attributes=prop_select(props,i))
                 i += 1
         else:
-             new_node = new_entity.entity(prov.Identifier(neid),other_attributes=props)
+	     #print eid
+	     #print repr(neid)
+	     #print instance_dict
+	     #print numInstances
+	     #print linkedGroups
+             new_node = new_entity.entity(neid,other_attributes=props)
+             #new_node = new_entity.entity(prov.Identifier(neid),other_attributes=props)
 
     for rel in relations:
 
@@ -564,6 +683,7 @@ def add_records(old_entity, new_entity, instance_dict):
 	#expand all possible formal attributes
 	linkedMatrix=collections.OrderedDict()
 	expAttr=collections.OrderedDict()
+
 	for fa1 in rel.formal_attributes:
 		linkedMatrix[fa1[0]]=collections.OrderedDict()
 		for fa2 in rel.formal_attributes:
@@ -577,6 +697,9 @@ def add_records(old_entity, new_entity, instance_dict):
 				expAttr[fa1[0]]=[expAttr[fa1[0]]]
 		else:
 			expAttr[fa1[0]]=[None]
+
+	#dont forget extra attrs. these are not expanded but taken as is.
+	
 	
 	#we also want grouped relation attribute names
 	linkedRelAttrs=[]
@@ -591,9 +714,9 @@ def add_records(old_entity, new_entity, instance_dict):
 	
 
 	
-	print "------------------------------------------------"
+	#print "------------------------------------------------"
 	
-	print "THIS : "  + repr(expAttr)
+	#print "THIS : "  + repr(expAttr)
 	"""
 	print "------------------------------------------------"
 	for f1 in linkedMatrix:
@@ -605,13 +728,11 @@ def add_records(old_entity, new_entity, instance_dict):
 			print str(linkedMatrix[f1][f2]) + "\t",
 		print
 	"""
-	print "------------------------------------------------"
+	#print "------------------------------------------------"
 
-	print repr(linkedRelAttrs)
+	#print repr(linkedRelAttrs)
 
         args = rel.args
-	if prnt:
-        	print (repr(args))
         #(first,second, third) = args     
         #(nfirst,nsecond) = (match_qn(first,instance_dict),match_qn(second,instance_dict))     
 
@@ -626,42 +747,21 @@ def add_records(old_entity, new_entity, instance_dict):
       
         (nfirst,nsecond) = (match(args[0],instance_dict, False),match(args[1],instance_dict, False))     
 
-	#NOT required
-	"""
-	linked=False
-	#highly unefficient
-	firstLink=None
-	first=nfirst
-	if isinstance(first, list):
-		first=first[0]
-	for n in new_entity.records:
-		if n.identifier==first:
-			#print str(n.identifier) + " " + str(first)
-			#print repr(n.attributes)
-			for a in n.attributes:
-				if tmpl_linked_qn == a[0]:
-					print "Found link for " + str(first) + " " + str(a[1])
-					firstLink=a[1]
-	secondLink=None
-	second=nsecond
-	if isinstance(second, list):
-		second=second[0]
-	print str(first) + "  ---  " + str(second)
-	for n in new_entity.records:
-		if n.identifier==second:
-			for a in n.attributes:
-				if tmpl_linked_qn == a[0]:
-					print "Found link for " + str(second) + " " + str(a[1])
-					secondLink= a[1]
 
-	print repr(firstLink) + "   " + repr(secondLink)
+	#dont forget extra attrs
+	otherAttr=list()
+	for ea1 in rel.extra_attributes:
+		ea1_match=match(ea1[1], instance_dict, False)
+		if isinstance(ea1_match, list):
+			for a in ea1_match:
+				otherAttr.append(tuple([ea1[0], a]))
+		else:
+			otherAttr.append(tuple([ea1[0], ea1_match]))
 	
-	if (firstLink != None or secondLink != None) and ( firstLink==second or secondLink==first):
-		linked=True
-	"""
+	idents=match(rel.identifier, instance_dict, False)
 
 	#We need to check if instances are linked    
-        new_rel = set_rel(new_entity,rel,expAttr,linkedRelAttrs)        
+        new_rel = set_rel(new_entity,rel,idents, expAttr,linkedRelAttrs, otherAttr)        
         #new_rel = set_rel_o(new_entity,rel,nfirst,nsecond, linked)        
     return new_entity   
 
@@ -706,12 +806,15 @@ def match(eid,mdict, node, numEntries=1):
     #override: vargen found in entity declaration position: create a uuid
     #print "match " + repr(adr) + " with " + str(adr) + " red " + str(adr)[:7]
     #not optimal, need ability to provide custom namespace
+
+    # FIX NAMESPACE FOR UUID!!!!!!!!
+
     if node and "vargen:" in str(adr) and str(adr)[:7]=="vargen:":
 	ret=None
 	for e in range(0,numEntries):
 		uid=str(uuid.uuid4())
 		if adr not in mdict:
-			ret=prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
+			ret=prov.QualifiedName(GLOBAL_UUID_NS, uid)
 			mdict[adr]=ret
 		else:
 			if not isinstance(mdict[adr], list):
@@ -721,7 +824,7 @@ def match(eid,mdict, node, numEntries=1):
 				tmp2=list()
 				tmp2.append(ret)
 				ret=tmp2
-			qn=prov.QualifiedName(prov.Namespace("ex", "http://example.com#"), uid)
+			qn=prov.QualifiedName(GLOBAL_UUID_NS, uid)
 			mdict[adr].append(qn)
 			ret.append(qn)
 	return ret
@@ -775,8 +878,8 @@ def instantiate_template(prov_doc,instance_dict):
         instance_dict (dict): match dictionary
     ''' 
     
-    print("here inst templ")
-    
+    #print("here inst templ")
+
     new_doc = set_namespaces(prov_doc.namespaces,prov.ProvDocument()) 
     
     new_doc = add_records(prov_doc,new_doc,instance_dict)
