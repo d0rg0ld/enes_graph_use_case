@@ -1,0 +1,25 @@
+Problems with local names starting with digits, not permitted in original XML spec
+strange splitting behavior by eg rdflib
+when only digits in local name: "cant split" exception
+
+https://lists.w3.org/Archives/Public/public-rdf-comments/2012Jun/0017.html
+
+Relax name character restrictions  #742
+https://github.com/RDFLib/rdflib/issues/742
+
+
+# DEFINE LIMITATION
+
+For URIs whose local name starts with a number, there is a problem with the automatic namespace extraction
+FOR URIs whose local name only consists of numbers, there is a "cant split" error raised by RDFlib
+
+
+
+# PROBLEM: passed URIS without local name // only namespace ???
+
+
+TODO:
+
+ADAPT INSTANCE DICT IN PROVCONV TO NEW VERSION; INCLUDE TYPES
+
+

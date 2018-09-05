@@ -93,16 +93,65 @@ def set_namespaces(ns, prov_doc):
         Prov document (or bundle) instance with namespaces set
     '''    
     
-    
+ 
     if isinstance(ns,dict):  
         for (sn,ln) in ns.items():
+    	    #print "Add NS " + sn + " " + ln 
             prov_doc.add_namespace(sn,ln)         
     else:
         for nsi in ns:
+    	    #print "Add NS " + repr(nsi)  
             prov_doc.add_namespace(nsi)     
     return prov_doc  
 
-def read_binding(binding_file):
+def setEntry(rec, regNS):
+	#keys:	@id	(for quali)
+
+	#	@type	(for value)
+	#	@value	(for value)
+	out=rec
+	# we got a qualified namea
+	try:
+		if "@id" in rec:
+			toks=rec["@id"].split(":")
+			if len(toks) > 2:
+				print "Invalid Qualified Name " + rec["@id"] + " found in V3 Json Binding"
+			for ns in regNS.get_registered_namespaces():
+				if ns.prefix==toks[0]:
+					out=prov.model.QualifiedName(ns, toks[1])	
+		if "@value" in rec:
+			if "@type" in rec:
+				out=prov.model.Literal(rec["@value"], datatype=rec["@type"])	
+			else:
+				out=rec["@value"]
+	except:
+		print "Error parsing " + repr(rec)
+		pass
+	return out
+
+def read_binding_v3(v3_dict):
+	if "context" in v3_dict:
+		print v3_dict["context"]
+		namespaces=set()
+		for k in  v3_dict["context"]:
+			namespaces.add(prov.model.Namespace(k, v3_dict["context"][k]))	
+		template=provconv.set_namespaces(namespaces, template)
+	if "var" in v3_dict:	
+		for v in v3_dict["var"]:
+			val=list()
+			for rec in v3_dict["var"][v]:
+				val.append(setEntry(rec, template._namespaces))
+			bindings_dict["var:"+v]=val
+	if "vargen" in v3_dict:	
+		for v in v3_dict["vargen"]:
+			val=list()
+			for rec in v3_dict["vargen"][v]:
+				val.append(setEntry(rec, template._namespaces))
+			bindings_dict["vargen:"+v]=val
+	
+
+
+def read_binding(bindings_doc):
 	'''
 	read PROV binding file and create dict object
 
@@ -112,7 +161,7 @@ def read_binding(binding_file):
 		binding_dict_out
 	'''
 
-	bindings_doc=provbase.read(binding_file)
+	#bindings_doc=provbase.read(binding_file)
 
 	binding_dict=dict()
 
@@ -575,7 +624,7 @@ def add_records(old_entity, new_entity, instance_dict):
     for rec in old_entity.records:
         if rec.is_element():
            nodes.append(rec)
-           #print(rec)
+           print(rec)
         elif rec.is_relation():
            relations.append(rec)
         else:
@@ -616,7 +665,19 @@ def add_records(old_entity, new_entity, instance_dict):
         if isinstance(neid,list):
             i = 0
             for n in neid: 
-                new_node = new_entity.entity(n,other_attributes=prop_select(props,i))
+		oa=prop_select(props,i)
+		print repr(oa)
+		otherAttr=list()
+		for ea1 in oa:
+			print ea1
+			#ea1_match=match(ea1[1], instance_dict, False)
+			if isinstance(oa[ea1], list):
+				for a in oa[ea1]:
+					otherAttr.append(tuple([ea1, a]))
+			else:
+				otherAttr.append(tuple([ea1, oa[ea1]]))
+		print n
+                new_node = new_entity.entity(n,other_attributes=otherAttr)
                 #new_node = new_entity.entity(prov.Identifier(n),other_attributes=prop_select(props,i))
                 i += 1
         else:
@@ -885,9 +946,15 @@ def instantiate_template(prov_doc,instance_dict):
     new_doc = add_records(prov_doc,new_doc,instance_dict)
     
     blist = list(prov_doc.bundles)
-   
+  
+    #print repr(blist)
+    print "iterating bundles"
     for bundle in blist:       
-        new_bundle = new_doc.bundle(bundle.identifier)               
+	id1=match(bundle.identifier, instance_dict, True)
+	print id1
+	print "---"
+        new_bundle = new_doc.bundle(id1)   
+	#print repr(new_bundle)           
         new_bundle = add_records(bundle, new_bundle,instance_dict)      
-            
+           
     return new_doc
