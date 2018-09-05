@@ -130,6 +130,7 @@ def setEntry(rec, regNS):
 	return out
 
 def read_binding_v3(v3_dict):
+	bindings_dict=dict()
 	if "context" in v3_dict:
 		print v3_dict["context"]
 		namespaces=set()
